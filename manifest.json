@@ -1,7 +1,7 @@
 {
   "name": "My Goal App",
   "short_name": "GoalApp",
-  "start_url": "/",
+  "start_url": "/my-goal-app/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#000000"
