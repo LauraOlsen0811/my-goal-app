@@ -1,7 +1,7 @@
 {
-  "name": "Aura- Habits & Goals",
-  "short_name": "Aura",
-  "start_url": "/my-goal-app/",
+  "name": "My Goal App",
+  "short_name": "GoalApp",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#000000"
