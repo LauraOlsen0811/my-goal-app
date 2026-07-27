@@ -1,8 +1,9 @@
 {
-  "name": "My Goal App",
-  "short_name": "GoalApp",
+  "name": "Aura",
+  "short_name": "Aura",
+  "description": "Cozy Habit & Goal Tracker",
   "start_url": "./index.html",
   "display": "standalone",
-  "background_color": "#ffffff",
-  "theme_color": "#000000"
+  "background_color": "#FAF7F2",
+  "theme_color": "#FAF7F2"
 }
