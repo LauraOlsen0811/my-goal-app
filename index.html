@@ -8,62 +8,129 @@
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        // Custom color themes dictionary
+        // Custom color themes dictionary supporting both Light and Dark modes
         const themes = {
             cozy: {
-                bg: '#FBF9F5',
-                card: '#F4EFEB',
-                border: '#E8E1D9',
-                borderHover: '#D5CBC0',
-                textMain: '#262422',
-                textMuted: '#8C8275',
-                accent: '#8C8275',
-                accentText: '#FBF9F5',
-                badgeBg: '#F4C2C2',
-                dayColors: ['#E8E1D9', '#D9CCBE', '#BFA994', '#99826C']
+                light: {
+                    bg: '#FBF9F5',
+                    card: '#F4EFEB',
+                    border: '#E8E1D9',
+                    borderHover: '#D5CBC0',
+                    textMain: '#262422',
+                    textMuted: '#8C8275',
+                    accent: '#8C8275',
+                    accentText: '#FBF9F5',
+                    badgeBg: '#F4C2C2',
+                    dayColors: ['#E8E1D9', '#D9CCBE', '#BFA994', '#99826C']
+                },
+                dark: {
+                    bg: '#1C1A18',
+                    card: '#262422',
+                    border: '#3D3A36',
+                    borderHover: '#524E49',
+                    textMain: '#FBF9F5',
+                    textMuted: '#B3AAA0',
+                    accent: '#B3AAA0',
+                    accentText: '#1C1A18',
+                    badgeBg: '#5A3D3D',
+                    dayColors: ['#3D3A36', '#524E49', '#736B63', '#99826C']
+                }
             },
             forest: {
-                bg: '#F4F7F4',
-                card: '#E9EFE9',
-                border: '#D3DDD3',
-                borderHover: '#B5C4B5',
-                textMain: '#1B2E1B',
-                textMuted: '#647664',
-                accent: '#647664',
-                accentText: '#F4F7F4',
-                badgeBg: '#C2D9C2',
-                dayColors: ['#D3DDD3', '#9DC49D', '#689B68', '#3E6B3E']
+                light: {
+                    bg: '#F4F7F4',
+                    card: '#E9EFE9',
+                    border: '#D3DDD3',
+                    borderHover: '#B5C4B5',
+                    textMain: '#1B2E1B',
+                    textMuted: '#647664',
+                    accent: '#647664',
+                    accentText: '#F4F7F4',
+                    badgeBg: '#C2D9C2',
+                    dayColors: ['#D3DDD3', '#9DC49D', '#689B68', '#3E6B3E']
+                },
+                dark: {
+                    bg: '#141C14',
+                    card: '#1E281E',
+                    border: '#2D3D2D',
+                    borderHover: '#3F543F',
+                    textMain: '#F4F7F4',
+                    textMuted: '#98B098',
+                    accent: '#98B098',
+                    accentText: '#141C14',
+                    badgeBg: '#2D4A2D',
+                    dayColors: ['#2D3D2D', '#3F543F', '#527A52', '#689B68']
+                }
             },
             pink: {
-                bg: '#FCF5F7',
-                card: '#F5ECEF',
-                border: '#E8D5DC',
-                borderHover: '#D9BCC6',
-                textMain: '#362228',
-                textMuted: '#94727D',
-                accent: '#94727D',
-                accentText: '#FCF5F7',
-                badgeBg: '#F7C6D5',
-                dayColors: ['#E8D5DC', '#E89BB3', '#D46387', '#B8325D']
+                light: {
+                    bg: '#FCF5F7',
+                    card: '#F5ECEF',
+                    border: '#E8D5DC',
+                    borderHover: '#D9BCC6',
+                    textMain: '#362228',
+                    textMuted: '#94727D',
+                    accent: '#94727D',
+                    accentText: '#FCF5F7',
+                    badgeBg: '#FCF5F7',
+                    dayColors: ['#E8D5DC', '#E89BB3', '#D46387', '#B8325D']
+                },
+                dark: {
+                    bg: '#1F171A',
+                    card: '#2C2125',
+                    border: '#423137',
+                    borderHover: '#59424A',
+                    textMain: '#FCF5F7',
+                    textMuted: '#C4A2AD',
+                    accent: '#C4A2AD',
+                    accentText: '#1F171A',
+                    badgeBg: '#592938',
+                    dayColors: ['#423137', '#733D4F', '#A64E6B', '#D46387']
+                }
             },
             blue: {
-                bg: '#F4F7FA',
-                card: '#EBF1F7',
-                border: '#D3E2F0',
-                borderHover: '#B5CEE3',
-                textMain: '#1A2936',
-                textMuted: '#698094',
-                accent: '#698094',
-                accentText: '#F4F7FA',
-                badgeBg: '#C2E0FE',
-                dayColors: ['#D3E2F0', '#93C5FD', '#60A5FA', '#2563EB']
+                light: {
+                    bg: '#F4F7FA',
+                    card: '#EBF1F7',
+                    border: '#D3E2F0',
+                    borderHover: '#B5CEE3',
+                    textMain: '#1A2936',
+                    textMuted: '#698094',
+                    accent: '#698094',
+                    accentText: '#F4F7FA',
+                    badgeBg: '#C2E0FE',
+                    dayColors: ['#D3E2F0', '#93C5FD', '#60A5FA', '#2563EB']
+                },
+                dark: {
+                    bg: '#141B22',
+                    card: '#1E2730',
+                    border: '#2E3F4F',
+                    borderHover: '#425C73',
+                    textMain: '#F4F7FA',
+                    textMuted: '#9AB2C7',
+                    accent: '#9AB2C7',
+                    accentText: '#141B22',
+                    badgeBg: '#1E3A5F',
+                    dayColors: ['#2E3F4F', '#3B82F6', '#60A5FA', '#93C5FD']
+                }
             }
         };
 
+        let isDarkMode = localStorage.getItem('aura_dark_mode') === 'true';
+
+        function toggleDarkMode() {
+            isDarkMode = !isDarkMode;
+            localStorage.setItem('aura_dark_mode', isDarkMode);
+            const currentThemeName = localStorage.getItem('aura_theme') || 'cozy';
+            setTheme(currentThemeName);
+        }
+
         function setTheme(themeName) {
             localStorage.setItem('aura_theme', themeName);
-            const t = themes[themeName] || themes.cozy;
+            const modeKey = isDarkMode ? 'dark' : 'light';
+            const t = (themes[themeName] && themes[themeName][modeKey]) || themes.cozy[modeKey];
             const root = document.documentElement;
+            
             root.style.setProperty('--bg', t.bg);
             root.style.setProperty('--card', t.card);
             root.style.setProperty('--border', t.border);
@@ -73,6 +140,27 @@
             root.style.setProperty('--accent', t.accent);
             root.style.setProperty('--accent-text', t.accentText);
             root.style.setProperty('--badge-bg', t.badgeBg);
+
+            // Update theme selector buttons in modals to match current mode colors
+            document.querySelectorAll('.edit-theme-btn, .welcome-theme-btn').forEach(btn => {
+                const themeKey = btn.dataset.etheme || btn.dataset.wtheme;
+                if (themes[themeKey] && themes[themeKey][modeKey]) {
+                    const th = themes[themeKey][modeKey];
+                    btn.style.backgroundColor = th.card;
+                    btn.style.color = th.textMain;
+                    btn.style.borderColor = th.border;
+                }
+            });
+
+            // Update mode toggle icon visuals inside settings modal if loaded
+            const darkIcon = document.getElementById('dark-mode-icon');
+            if (darkIcon) {
+                darkIcon.innerText = isDarkMode ? '☀️' : '🌙';
+            }
+            const darkText = document.getElementById('dark-mode-text');
+            if (darkText) {
+                darkText.innerText = isDarkMode ? 'Light Mode' : 'Dark Mode';
+            }
             
             renderApp();
         }
@@ -152,8 +240,9 @@
                 </div>
             </div>
             
-            <div class="flex items-center space-x-3">
+            <div class="flex items-center space-x-2 sm:space-x-3">
                 <span id="date-text" class="hidden sm:inline text-xs font-medium px-3 py-2 rounded-full border border-[var(--border)] bg-[var(--card)] transition-colors" style="color: var(--text-muted)"></span>
+                
                 <button onclick="openSanctuaryModal()" class="text-xs font-medium px-3 py-2 rounded-full border border-[var(--border)] bg-[var(--card)] hover:opacity-80 transition-all flex items-center gap-1.5" style="color: var(--text-main)" title="Edit Sanctuary & Profile">
                     <span>⚙️</span> <span class="hidden sm:inline">Settings</span>
                 </button>
@@ -188,7 +277,7 @@
                             <h2 id="sanctuary-title-display" class="text-xl font-medium" style="color: var(--text-main)">Today's Sanctuary</h2>
                         </div>
                     </div>
-                    <p class="text-xs mt-0.5" style="color: var(--text-muted)">Check off items daily. Use streak freezes when life happens, and click any calendar day to review past dates.</p>
+                    <p class="text-xs mt-0.5" style="color: var(--text-muted)">Viewing Tasks for: <strong id="selected-date-display" style="color: var(--text-main)">Today</strong></p>
                 </div>
                 <div class="flex items-center gap-2">
                     <div class="flex items-center bg-[var(--bg)] border border-[var(--border)] rounded-xl px-2 py-1 transition-colors">
@@ -207,14 +296,24 @@
 
         <!-- All Lists View -->
         <div id="view-lists" class="hidden space-y-6">
-            <h2 class="text-xl font-medium" style="color: var(--text-main)">Your Goal Lists</h2>
+            <div class="bg-[var(--card)] rounded-2xl p-6 border border-[var(--border)] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 transition-colors">
+                <div class="flex-1 w-full">
+                    <h2 class="text-xl font-medium" style="color: var(--text-main)">Your Goal Lists</h2>
+                    <p class="text-xs mt-0.5" style="color: var(--text-muted)">Viewing Date: <strong id="grid-date-display" style="color: var(--text-main)">Today</strong>. Click any cell on the calendar to change dates.</p>
+                </div>
+                <div class="flex items-center bg-[var(--bg)] border border-[var(--border)] rounded-xl px-2 py-1 transition-colors">
+                    <button onclick="shiftDashboardDate(-1)" class="px-2 py-1 text-xs font-bold rounded-lg hover:bg-[var(--card)] transition-colors" style="color: var(--text-main)" title="Previous Day">◀</button>
+                    <input type="date" id="grid-date-picker" onchange="changeDashboardDate(this.value)" class="bg-transparent text-xs px-2 py-1 outline-none font-medium cursor-pointer" style="color: var(--text-main)" title="View/Check past dates">
+                    <button onclick="shiftDashboardDate(1)" class="px-2 py-1 text-xs font-bold rounded-lg hover:bg-[var(--card)] transition-colors" style="color: var(--text-main)" title="Next Day">▶</button>
+                </div>
+            </div>
             <div id="lists-container" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
         </div>
     </main>
 
     <!-- Settings Modal -->
     <div id="sanctuary-modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-[var(--bg)] rounded-3xl max-w-sm w-full p-6 border border-[var(--border)] shadow-xl space-y-4 transition-colors">
+        <div class="bg-[var(--bg)] rounded-3xl max-w-sm w-full p-6 border border-[var(--border)] shadow-xl space-y-4 transition-colors max-h-[90vh] overflow-y-auto">
             <h3 class="text-lg font-semibold" style="color: var(--text-main)">Edit Profile & Sanctuary</h3>
             <p class="text-xs" style="color: var(--text-muted)">Customize your name, sanctuary title, and mood theme.</p>
             <div class="space-y-3">
@@ -235,10 +334,41 @@
                         <button type="button" onclick="selectEditTheme('blue', this)" data-etheme="blue" class="edit-theme-btn p-2 rounded-xl border border-[var(--border)] bg-[#EBF1F7] text-[10px] font-medium text-[#1A2936] transition-all">Blue</button>
                     </div>
                 </div>
+                <div>
+                    <label class="block text-[10px] font-semibold uppercase mb-1" style="color: var(--text-muted)">Display Mode</label>
+                    <button type="button" onclick="toggleDarkMode()" class="w-full text-xs font-medium px-3 py-2.5 rounded-xl border border-[var(--border)] bg-[var(--card)] hover:opacity-80 transition-all flex items-center justify-center gap-2" style="color: var(--text-main)">
+                        <span id="dark-mode-icon">🌙</span> <span id="dark-mode-text">Dark Mode</span>
+                    </button>
+                </div>
+                
+                <!-- Danger Zone: Delete Current Sanctuary -->
+                <div class="pt-3 border-t border-[var(--border)] space-y-1.5">
+                    <label class="block text-[10px] font-semibold uppercase text-red-500">Danger Zone</label>
+                    <button type="button" onclick="deleteCurrentSanctuary()" class="w-full text-xs font-medium px-3 py-2.5 rounded-xl border border-red-500/30 bg-red-500/10 hover:bg-red-500/20 text-red-600 dark:text-red-400 transition-all flex items-center justify-center gap-2 font-semibold">
+                        🗑️ Delete Current Sanctuary
+                    </button>
+                </div>
             </div>
             <div class="flex justify-end space-x-2 pt-2">
                 <button type="button" onclick="closeSanctuaryModal()" class="px-4 py-2 text-xs font-medium" style="color: var(--text-muted)">Cancel</button>
                 <button type="button" onclick="saveSanctuaryName()" class="px-5 py-2 rounded-full text-xs font-medium transition-all" style="background-color: var(--accent); color: var(--accent-text)">Save Changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Done/Archived Tasks Modal -->
+    <div id="archived-tasks-modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-[var(--bg)] rounded-3xl max-w-md w-full p-6 border border-[var(--border)] shadow-xl space-y-4 transition-colors max-h-[85vh] flex flex-col">
+            <div class="flex items-center justify-between">
+                <h3 class="text-lg font-semibold flex items-center gap-2" style="color: var(--text-main)">
+                    <span>📁</span> Completed / Archived Tasks
+                </h3>
+                <button onclick="closeArchivedTasksModal()" class="text-xs font-medium px-2 py-1 rounded-lg bg-[var(--card)] border border-[var(--border)]" style="color: var(--text-muted)">✕</button>
+            </div>
+            <p class="text-xs" style="color: var(--text-muted)">Here are all the tasks you have completed for this list. You can uncheck them to move them back to active tasks.</p>
+            <div id="archived-tasks-list-container" class="space-y-2 overflow-y-auto flex-1 pr-1"></div>
+            <div class="pt-2 flex justify-end">
+                <button onclick="closeArchivedTasksModal()" class="px-5 py-2 rounded-full text-xs font-medium transition-all" style="background-color: var(--accent); color: var(--accent-text)">Close</button>
             </div>
         </div>
     </div>
@@ -253,7 +383,7 @@
                     <label class="block text-xs font-semibold uppercase mb-1" style="color: var(--text-muted)">List Type</label>
                     <div class="grid grid-cols-2 gap-2">
                         <button type="button" id="type-habit" onclick="setListType('habit')" class="py-2 text-xs font-medium rounded-xl border transition-all">Habit Tracker</button>
-                        <button type="button" id="type-todo" onclick="setListType('todo')" class="py-2 text-xs font-medium rounded-xl border transition-all">To-Do / Interval List</button>
+                        <button type="button" id="type-todo" onclick="setListType('todo')" class="py-2 text-xs font-medium rounded-xl border transition-all">To-Do / Task List</button>
                     </div>
                 </div>
                 <div>
@@ -354,7 +484,6 @@
         let selectedWelcomeThemeName = 'cozy';
         let selectedEditThemeName = 'cozy';
 
-        // Safe Parsing Helpers to Prevent Timezone Offsets Across Midnight
         function parseLocalDate(dStr) {
             if (!dStr) return new Date();
             const parts = dStr.split('-');
@@ -369,11 +498,6 @@
             const month = String(d.getMonth() + 1).padStart(2, '0');
             const day = String(d.getDate()).padStart(2, '0');
             return `${year}-${month}-${day}`;
-        }
-
-        function initThemeOnLoad() {
-            const savedTheme = localStorage.getItem('aura_theme') || 'cozy';
-            setTheme(savedTheme);
         }
 
         function selectWelcomeTheme(themeName, btn) {
@@ -393,8 +517,28 @@
             btn.classList.add('ring-2', 'ring-[var(--accent)]');
         }
 
-        function setListType(type) {
+        function toggleTaskDateOptions(checkbox) {
+            const container = checkbox.closest('.task-row').querySelector('.task-date-options');
+            if (checkbox.checked) {
+                container.classList.remove('hidden');
+            } else {
+                container.classList.add('hidden');
+            }
+        }
+
+        function toggleTaskRecurrenceOptions(select) {
+            const container = select.closest('.task-row').querySelector('.task-recurrence-options');
+            if (select.value === 'none') {
+                container.classList.add('hidden');
+            } else {
+                container.classList.remove('hidden');
+            }
+        }
+
+        function setListType(type, preserveData = false) {
+            let previousType = selectedListType;
             selectedListType = type;
+
             let btnHabit = document.getElementById('type-habit');
             let btnTodo = document.getElementById('type-todo');
             let durContainer = document.getElementById('duration-container');
@@ -427,9 +571,13 @@
                 durContainer.style.display = 'none';
                 startContainer.style.display = 'none';
                 freezeContainer.style.display = 'none';
-                habitsLabel.innerText = "Tasks, Target Dates & Intervals";
-                habitsHint.innerText = "Add tasks with a specific target date or repeating interval (e.g., every 3 weeks).";
+                habitsLabel.innerText = "Tasks";
+                habitsHint.innerText = "Add standard tasks, or optionally set a due date and repeating schedule.";
                 addItemBtn.innerText = "+ Add Task";
+            }
+
+            if (!preserveData && previousType !== type) {
+                renderTaskInputRows([]);
             }
         }
 
@@ -443,8 +591,12 @@
             let curr = parseLocalDate(activeViewDate);
             curr.setDate(curr.getDate() + amount);
             activeViewDate = getLocalDateStr(curr);
-            let datePicker = document.getElementById('dash-date-picker');
-            if (datePicker) datePicker.value = activeViewDate;
+            
+            let dashDatePicker = document.getElementById('dash-date-picker');
+            let gridDatePicker = document.getElementById('grid-date-picker');
+            if (dashDatePicker) dashDatePicker.value = activeViewDate;
+            if (gridDatePicker) gridDatePicker.value = activeViewDate;
+            
             renderApp();
         }
 
@@ -460,15 +612,9 @@
                     }
                 } catch(e) {}
             }
-            if (!appData.lists) {
-                appData.lists = [];
-            }
-            if (!appData.sanctuaryName) {
-                appData.sanctuaryName = "Today's Sanctuary";
-            }
-            if (!appData.theme) {
-                appData.theme = localStorage.getItem('aura_theme') || 'cozy';
-            }
+            if (!appData.lists) appData.lists = [];
+            if (!appData.sanctuaryName) appData.sanctuaryName = "Today's Sanctuary";
+            if (!appData.theme) appData.theme = localStorage.getItem('aura_theme') || 'cozy';
 
             setTheme(appData.theme);
 
@@ -547,6 +693,16 @@
             closeSanctuaryModal();
         }
 
+        // Deletes the current sanctuary and all app data with a confirmation prompt
+        function deleteCurrentSanctuary() {
+            if (confirm("Are you sure you want to permanently delete this sanctuary and all associated lists? This action cannot be undone.")) {
+                localStorage.removeItem(STORAGE_KEY);
+                appData = { lists: [], sanctuaryName: "", userName: "", theme: "cozy" };
+                closeSanctuaryModal();
+                openWelcomeModal();
+            }
+        }
+
         function isDateFrozen(list, dStr) {
             if (!list.freezes || !Array.isArray(list.freezes)) return false;
             return list.freezes.includes(dStr);
@@ -588,13 +744,26 @@
             if (updated) saveData();
         }
 
+        function getSortedHabits(list) {
+            let habits = [...(list.habits || [])];
+            if (list.type === 'todo') {
+                habits.sort((a, b) => {
+                    if (!a.dueDate && !b.dueDate) return 0;
+                    if (!a.dueDate) return 1;  
+                    if (!b.dueDate) return -1; 
+                    return a.dueDate.localeCompare(b.dueDate);
+                });
+            }
+            return habits;
+        }
+
         function getStats(list) {
             if (list.type === 'todo') {
-                let total = list.habits.length;
-                let todayStr = getLocalDateStr();
-                let availableCount = list.habits.filter(h => !h.dueDate || h.dueDate <= todayStr).length;
-                let doneCount = list.habits.filter(h => list.checks && list.checks['todo'] && list.checks['todo'][h.id]).length;
-                let percent = availableCount > 0 ? Math.min(100, Math.round((doneCount / availableCount) * 100)) : (total > 0 ? 100 : 0);
+                let viewDate = activeViewDate || getLocalDateStr();
+                let availableTasks = list.habits.filter(h => !h.dueDate || h.dueDate <= viewDate);
+                let availableCount = availableTasks.length;
+                let doneCount = availableTasks.filter(h => list.checks && list.checks[viewDate] && list.checks[viewDate][h.id]).length;
+                let percent = availableCount > 0 ? Math.min(100, Math.round((doneCount / availableCount) * 100)) : (list.habits.length > 0 ? 100 : 0);
                 return { streak: 0, completedDays: doneCount, missedCount: 0, percent };
             }
 
@@ -626,11 +795,11 @@
             return { streak, completedDays, missedCount: (list.missedDays || []).length, percent };
         }
 
-        // Updated for Dynamic Item-by-Item Incremental Color Step Calculation
         function getDayColorStyle(doneCount, totalCount, isFuture, isFrozen, isMissed, isSelectedDate) {
             const currentThemeName = localStorage.getItem('aura_theme') || 'cozy';
-            const t = themes[currentThemeName] || themes.cozy;
-            const colors = t.dayColors; // Array of 4 shade colors
+            const modeKey = isDarkMode ? 'dark' : 'light';
+            const t = (themes[currentThemeName] && themes[currentThemeName][modeKey]) || themes.cozy[modeKey];
+            const colors = t.dayColors; 
 
             let styleStr = '';
 
@@ -645,7 +814,6 @@
             } else if (doneCount >= totalCount) {
                 styleStr = `background-color: ${colors[3]}; color: var(--accent-text); font-weight: 600;`; 
             } else {
-                // Determine step dynamically based on exact count completed vs total
                 let colorIndex = Math.min(2, Math.max(1, Math.floor((doneCount / totalCount) * (colors.length - 1))));
                 styleStr = `background-color: ${colors[colorIndex]}; color: var(--text-main);`;
             }
@@ -709,9 +877,9 @@
                         let styleStr = getDayColorStyle(doneCount, totalHabits, isFuture, isFrozen, isMissed, isSelectedDate);
                         let tooltip = isFrozen ? `Day ${dStr}: Streak Frozen 🛡️` : (isMissed ? `Day ${dStr}: Missed ⚠️` : `Day ${dStr}: ${doneCount}/${totalHabits} completed`);
 
-                        html += `<div onclick="jumpToDate('${dStr}')" class="w-7 h-7 mx-auto rounded-lg flex items-center justify-center text-xs transition-all cursor-pointer hover:scale-110" style="${styleStr}" title="${tooltip} (Click to view/check this day)">${d}</div>`;
+                        html += `<div onclick="jumpToDate('${dStr}')" class="w-full aspect-square max-w-[28px] mx-auto rounded-md flex items-center justify-center text-[10px] sm:text-xs transition-all cursor-pointer hover:scale-105" style="${styleStr}" title="${tooltip}">${d}</div>`;
                     } else {
-                        html += `<div class="w-7 h-7 mx-auto rounded-lg text-[var(--text-muted)]/25 flex items-center justify-center text-xs">${d}</div>`;
+                        html += `<div class="w-full aspect-square max-w-[28px] mx-auto rounded-md text-[var(--text-muted)]/25 flex items-center justify-center text-[10px] sm:text-xs">${d}</div>`;
                     }
                 }
 
@@ -722,12 +890,7 @@
             return `
                 <div class="mt-4 pt-4 border-t border-[var(--border)]">
                     <div class="flex items-center justify-between mb-3">
-                        <span class="text-xs font-semibold uppercase tracking-wider" style="color: var(--text-muted)">Challenge Calendar Grid (Click day to check/edit)</span>
-                        <div class="flex items-center space-x-2 text-[10px]" style="color: var(--text-muted)">
-                            <span class="flex items-center space-x-1"><span class="w-2.5 h-2.5 rounded-xs border border-[var(--accent)] inline-block"></span><span>Selected</span></span>
-                            <span class="flex items-center space-x-1"><span class="w-2.5 h-2.5 rounded-xs bg-[var(--card)] border border-[var(--border)] inline-block"></span><span>Frozen 🛡️</span></span>
-                            <span class="flex items-center space-x-1"><span class="w-2.5 h-2.5 rounded-xs inline-block" style="background-color: var(--border);"></span><span>Missed</span></span>
-                        </div>
+                        <span class="text-xs font-semibold uppercase tracking-wider" style="color: var(--text-muted)">Calendar Grid (Click day to inspect/check)</span>
                     </div>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-72 overflow-y-auto pr-1">
                         ${html}
@@ -738,10 +901,12 @@
 
         function jumpToDate(dStr) {
             activeViewDate = dStr;
-            let datePicker = document.getElementById('dash-date-picker');
-            if (datePicker) datePicker.value = dStr;
-            switchTab('dashboard');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            let dashDatePicker = document.getElementById('dash-date-picker');
+            let gridDatePicker = document.getElementById('grid-date-picker');
+            if (dashDatePicker) dashDatePicker.value = dStr;
+            if (gridDatePicker) gridDatePicker.value = dStr;
+
+            renderApp();
         }
 
         function renderCircularProgress(percent) {
@@ -767,10 +932,22 @@
             let todayStr = getLocalDateStr();
             if (!activeViewDate) activeViewDate = todayStr;
 
-            let datePicker = document.getElementById('dash-date-picker');
-            if (datePicker && datePicker.value !== activeViewDate) {
-                datePicker.value = activeViewDate;
+            let dashDatePicker = document.getElementById('dash-date-picker');
+            if (dashDatePicker && dashDatePicker.value !== activeViewDate) {
+                dashDatePicker.value = activeViewDate;
             }
+
+            let gridDatePicker = document.getElementById('grid-date-picker');
+            if (gridDatePicker && gridDatePicker.value !== activeViewDate) {
+                gridDatePicker.value = activeViewDate;
+            }
+
+            let dateLabel = activeViewDate === todayStr ? 'Today (' + activeViewDate + ')' : activeViewDate;
+            let selectedDateElem = document.getElementById('selected-date-display');
+            if (selectedDateElem) selectedDateElem.innerText = dateLabel;
+            
+            let gridDateElem = document.getElementById('grid-date-display');
+            if (gridDateElem) gridDateElem.innerText = dateLabel;
 
             document.getElementById('date-text').innerText = new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
             
@@ -790,22 +967,21 @@
             appData.lists.forEach(l => {
                 let st = getStats(l);
                 totalStreaks += st.streak;
+                if (!l.checks) l.checks = {};
+                if (!l.checks[activeViewDate]) l.checks[activeViewDate] = {};
+
                 if (l.type === 'todo') {
-                    if (!l.checks) l.checks = {};
-                    if (!l.checks['todo']) l.checks['todo'] = {};
                     l.habits.forEach(h => {
-                        let isLocked = h.dueDate && h.dueDate > todayStr;
-                        if (!isLocked) {
+                        let isVisibleInDaily = !h.dueDate || h.dueDate <= activeViewDate;
+                        if (isVisibleInDaily) {
                             totHabits++;
-                            if (l.checks['todo'][h.id]) totDone++;
+                            if (l.checks[activeViewDate][h.id]) totDone++;
                         }
                     });
                 } else {
-                    if (!l.checks) l.checks = {};
-                    if (!l.checks[todayStr]) l.checks[todayStr] = {};
                     l.habits.forEach(h => {
                         totHabits++;
-                        if (l.checks[todayStr][h.id]) totDone++;
+                        if (l.checks[activeViewDate][h.id]) totDone++;
                     });
                 }
             });
@@ -856,17 +1032,20 @@
                     let freezeDaysAllowed = l.freezeDuration !== undefined ? l.freezeDuration : 7;
                     let freezesLeft = Math.max(0, maxFreezes - Math.floor(freezesUsed / freezeDaysAllowed));
 
+                    let sortedHabits = getSortedHabits(l);
+                    let dashboardVisibleTasks = isTodo ? sortedHabits.filter(h => !h.dueDate || h.dueDate <= activeViewDate) : sortedHabits;
+
                     html += `
                         <div class="bg-[var(--card)] rounded-3xl p-6 border border-[var(--border)] shadow-sm space-y-4 transition-colors">
                             <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
                                 <div>
                                     <div class="flex items-center space-x-2">
                                         <span class="text-base px-2.5 py-1 rounded-full bg-[var(--bg)] border border-[var(--border)] inline-block">${catSymbol}</span>
-                                        <span class="text-[10px] font-semibold uppercase px-2 py-1 bg-[var(--bg)] border border-[var(--border)] rounded-lg" style="color: var(--text-muted)">${isTodo ? 'To-Do / Interval List' : 'Habit Tracker'}</span>
+                                        <span class="text-[10px] font-semibold uppercase px-2 py-1 bg-[var(--bg)] border border-[var(--border)] rounded-lg" style="color: var(--text-muted)">${isTodo ? 'To-Do / Task List' : 'Habit Tracker'}</span>
                                         ${!isTodo && maxFreezes > 0 ? `<span class="text-[10px] font-semibold uppercase px-2 py-1 bg-[var(--bg)] border border-[var(--border)] rounded-lg" style="color: var(--text-main)">🛡️ Freezes Left: ${freezesLeft}/${maxFreezes}</span>` : ''}
                                     </div>
                                     <h3 class="text-xl font-medium mt-2" style="color: var(--text-main)">${l.title}</h3>
-                                    <p class="text-xs mt-0.5" style="color: var(--text-muted)">${isTodo ? 'Task List with Dates & Intervals' : `Duration: ${l.durationDays} Days • Start: ${l.startDate}`}</p>
+                                    <p class="text-xs mt-0.5" style="color: var(--text-muted)">${isTodo ? 'Task List' : `Duration: ${l.durationDays} Days • Start: ${l.startDate}`}</p>
                                 </div>
                                 <div class="flex items-center space-x-3">
                                     ${!isTodo ? `
@@ -887,7 +1066,7 @@
                                                     ${viewIsFrozen ? '🛡️ Streak Frozen Today' : '🛡️ Freeze Streak'}
                                                 </button>
                                                 ${viewIsFrozen ? `
-                                                    <button onclick="unfreezeToday('${l.id}')" title="Unfreeze Today" class="text-[10px] px-2 py-1 bg-[var(--bg)] border border-[var(--border)] rounded-lg font-medium hover:opacity-80 text-red-600">
+                                                    <button onclick="unfreezeToday('${l.id}')" title="Unfreeze Today" class="text-[10px] px-2 py-1 bg-[var(--bg)] border border-[var(--border)] rounded-lg font-medium hover:opacity-80 text-red-500">
                                                         ✕
                                                     </button>
                                                 ` : ''}
@@ -907,61 +1086,68 @@
                             ` : ''}
 
                             <div class="space-y-2 pt-2">
-                                <div class="text-xs font-semibold uppercase tracking-wider" style="color: var(--text-muted)">${isTodo ? 'Tasks & Intervals' : `Habits for ${activeViewDate}`}</div>
+                                <div class="text-xs font-semibold uppercase tracking-wider" style="color: var(--text-muted)">${isTodo ? 'Tasks' : `Habits for ${activeViewDate}`}</div>
                     `;
 
-                    l.habits.forEach(h => {
-                        let checked = isTodo ? (l.checks && l.checks['todo'] && !!l.checks['todo'][h.id]) : !!(l.checks && l.checks[activeViewDate] && l.checks[activeViewDate][h.id]);
-                        let isLocked = isTodo && h.dueDate && h.dueDate > todayStr;
-                        let clickAction = isLocked || viewIsFrozen ? '' : (isTodo ? `toggleTodo('${l.id}', '${h.id}')` : `toggleCheck('${l.id}', '${h.id}', '${activeViewDate}')`);
-                        
-                        let metaInfo = '';
-                        if (isTodo) {
-                            let tags = [];
-                            if (h.dueDate) tags.push(`Due: ${h.dueDate}`);
-                            if (h.intervalValue && h.intervalUnit) tags.push(`Repeat: every ${h.intervalValue} ${h.intervalUnit}`);
-                            if (tags.length > 0) {
-                                metaInfo = `<span class="text-[10px] bg-[var(--card)] px-2 py-0.5 rounded-md border border-[var(--border)] ml-2" style="color: var(--text-muted)">${tags.join(' • ')}</span>`;
+                    if (dashboardVisibleTasks.length === 0) {
+                        html += `<div class="text-xs py-3 text-center italic" style="color: var(--text-muted)">No tasks due on or before ${activeViewDate}.</div>`;
+                    } else {
+                        dashboardVisibleTasks.forEach(h => {
+                            let checked = !!(l.checks && l.checks[activeViewDate] && l.checks[activeViewDate][h.id]);
+                            
+                            if (isTodo && checked) return;
+
+                            let clickAction = viewIsFrozen ? '' : `toggleCheck('${l.id}', '${h.id}', '${activeViewDate}')`;
+                            let isOverdue = isTodo && h.dueDate && h.dueDate < activeViewDate && !checked;
+
+                            let metaInfo = '';
+                            if (isTodo) {
+                                let tags = [];
+                                if (h.dueDate) tags.push(`Due: ${h.dueDate}`);
+                                if (h.intervalValue && h.intervalUnit && h.intervalUnit !== 'none') tags.push(`Repeat: every ${h.intervalValue} ${h.intervalUnit}`);
+                                if (tags.length > 0) {
+                                    metaInfo = `<span class="text-[10px] bg-[var(--card)] px-2 py-0.5 rounded-md border border-[var(--border)] ml-2" style="color: var(--text-muted)">${tags.join(' • ')}</span>`;
+                                }
                             }
-                        }
 
-                        let cardStyle = '';
-                        let textStyle = '';
-                        let subText = '';
+                            let cardStyle = '';
+                            let textStyle = '';
+                            let subText = '';
 
-                        if (isLocked) {
-                            cardStyle = 'bg-[var(--bg)]/30 border-[var(--border)] opacity-60 cursor-not-allowed';
-                            textStyle = 'text-[var(--text-muted)]';
-                            subText = `Available on ${h.dueDate}`;
-                        } else if (viewIsFrozen) {
-                            cardStyle = 'bg-[var(--bg)]/60 border-[var(--border)] opacity-80 cursor-default';
-                            textStyle = 'text-[var(--text-muted)]';
-                            subText = 'Frozen 🛡️';
-                        } else if (checked) {
-                            cardStyle = 'bg-[var(--bg)] border-[var(--border-hover)]';
-                            textStyle = 'text-[var(--text-muted)] line-through';
-                            subText = 'Done';
-                        } else {
-                            cardStyle = 'bg-[var(--bg)]/50 border-[var(--border)] hover:bg-[var(--bg)] cursor-pointer';
-                            textStyle = 'text-[var(--text-main)]';
-                            subText = activeViewDate < todayStr ? 'Missed / Unchecked' : 'Tap to complete';
-                        }
+                            if (viewIsFrozen) {
+                                cardStyle = 'bg-[var(--bg)]/60 border-[var(--border)] opacity-80 cursor-default';
+                                textStyle = 'text-[var(--text-muted)]';
+                                subText = 'Frozen 🛡️';
+                            } else if (checked) {
+                                cardStyle = 'bg-[var(--bg)] border-[var(--border-hover)]';
+                                textStyle = 'text-[var(--text-muted)] line-through';
+                                subText = 'Done';
+                            } else if (isOverdue) {
+                                cardStyle = 'bg-[var(--bg)]/80 border-red-500 ring-2 ring-red-500/80 cursor-pointer hover:bg-[var(--bg)]';
+                                textStyle = 'text-[var(--text-main)] font-medium';
+                                subText = '⚠️ Overdue';
+                            } else {
+                                cardStyle = 'bg-[var(--bg)]/50 border-[var(--border)] hover:bg-[var(--bg)] cursor-pointer';
+                                textStyle = 'text-[var(--text-main)]';
+                                subText = activeViewDate < todayStr ? 'Missed / Unchecked' : 'Tap to complete';
+                            }
 
-                        html += `
-                            <div onclick="${clickAction}" class="flex items-center justify-between p-3.5 rounded-2xl border transition-all ${cardStyle}">
-                                <div class="flex items-center space-x-3 flex-1 overflow-hidden">
-                                    <div class="w-5 h-5 rounded-md border flex items-center justify-center text-xs shrink-0 ${isLocked || viewIsFrozen ? 'border-[var(--border)] bg-[var(--border)]/40 text-transparent' : (checked ? 'border-[var(--accent)] text-white' : 'border-[var(--border-hover)] bg-[var(--card)]')}" ${checked && !isLocked && !viewIsFrozen ? 'style="background-color: var(--accent)"' : ''}>
-                                        ${checked ? '✓' : ''}
+                            html += `
+                                <div onclick="${clickAction}" class="flex items-center justify-between p-3.5 rounded-2xl border transition-all ${cardStyle}">
+                                    <div class="flex items-center space-x-3 flex-1 overflow-hidden">
+                                        <div class="w-5 h-5 rounded-md border flex items-center justify-center text-xs shrink-0 ${viewIsFrozen ? 'border-[var(--border)] bg-[var(--border)]/40 text-transparent' : (checked ? 'border-[var(--accent)] text-white' : (isOverdue ? 'border-red-500 bg-red-500/20' : 'border-[var(--border-hover)] bg-[var(--card)]'))}" ${checked && !viewIsFrozen ? 'style="background-color: var(--accent)"' : ''}>
+                                            ${checked ? '✓' : ''}
+                                        </div>
+                                        <div class="truncate">
+                                            <span class="text-sm font-medium ${textStyle}">${h.text}</span>
+                                            ${metaInfo}
+                                        </div>
                                     </div>
-                                    <div class="truncate">
-                                        <span class="text-sm font-medium ${textStyle}">${h.text}</span>
-                                        ${metaInfo}
-                                    </div>
+                                    <span class="text-[11px] shrink-0 ml-2 ${isOverdue ? 'text-red-500 font-semibold' : ''}" ${!isOverdue ? 'style="color: var(--text-muted)"' : ''}>${subText}</span>
                                 </div>
-                                <span class="text-[11px] shrink-0 ml-2" style="color: var(--text-muted)">${subText}</span>
-                            </div>
-                        `;
-                    });
+                            `;
+                        });
+                    }
 
                     html += `</div>`;
                     html += renderCalendarView(l);
@@ -976,6 +1162,11 @@
                 let st = getStats(l);
                 let catSymbol = l.category || '✨';
                 let isTodo = l.type === 'todo';
+                let sortedHabits = getSortedHabits(l);
+
+                let visibleHabits = isTodo ? sortedHabits.filter(h => !(l.checks && l.checks[activeViewDate] && l.checks[activeViewDate][h.id])) : sortedHabits;
+                let doneHabitsCount = isTodo ? sortedHabits.filter(h => l.checks && l.checks[activeViewDate] && l.checks[activeViewDate][h.id]).length : 0;
+
                 listsHtml += `
                     <div class="bg-[var(--card)] rounded-3xl p-6 border border-[var(--border)] flex flex-col justify-between shadow-sm transition-colors">
                         <div>
@@ -983,32 +1174,55 @@
                                 <span class="text-base px-2.5 py-1 rounded-full bg-[var(--bg)] border border-[var(--border)] inline-block">${catSymbol}</span>
                                 <div class="space-x-2">
                                     <button onclick="openEditModal('${l.id}')" class="text-xs font-medium hover:underline" style="color: var(--text-main)">Edit</button>
-                                    <button onclick="deleteList('${l.id}')" class="text-xs text-red-600 hover:underline">Delete</button>
+                                    <button onclick="deleteList('${l.id}')" class="text-xs text-red-500 hover:underline">Delete</button>
                                 </div>
                             </div>
                             <div class="flex justify-between items-start gap-3 mb-4">
                                 <div>
                                     <h3 class="text-xl font-medium" style="color: var(--text-main)">${l.title}</h3>
-                                    <p class="text-xs mt-0.5" style="color: var(--text-muted)">${isTodo ? 'To-Do / Interval List' : `Duration: ${l.durationDays} Days • Start: ${l.startDate}`}</p>
+                                    <p class="text-xs mt-0.5" style="color: var(--text-muted)">${isTodo ? 'To-Do / Task List' : `Duration: ${l.durationDays} Days • Start: ${l.startDate}`}</p>
                                 </div>
                                 ${renderCircularProgress(st.percent)}
                             </div>
                             
                             <div class="my-4 space-y-1">
-                                <div class="text-xs font-semibold uppercase tracking-wider" style="color: var(--text-muted)">${isTodo ? 'Tasks' : `Habits (${activeViewDate})`}</div>
-                                ${l.habits.map(h => {
-                                    let checked = isTodo ? (l.checks && l.checks['todo'] && !!l.checks['todo'][h.id]) : !!(l.checks && l.checks[activeViewDate] && l.checks[activeViewDate][h.id]);
-                                    let isLocked = isTodo && h.dueDate && h.dueDate > todayStr;
-                                    let clickAction = isLocked ? '' : (isTodo ? `toggleTodo('${l.id}', '${h.id}')` : `toggleCheck('${l.id}', '${h.id}', '${activeViewDate}')`);
-                                    let itemStyle = isLocked ? 'opacity-60 bg-[var(--bg)]/30' : (checked ? 'line-through text-[var(--text-muted)] bg-[var(--bg)]' : 'bg-[var(--bg)] hover:border-[var(--border-hover)] cursor-pointer');
+                                <div class="text-xs font-semibold uppercase tracking-wider mb-2" style="color: var(--text-muted)">${isTodo ? 'Tasks' : `Habits (${activeViewDate})`}</div>
+                                ${visibleHabits.length === 0 ? `<div class="text-xs py-2 italic text-center" style="color: var(--text-muted)">All active tasks completed! 🎉</div>` : ''}
+                                ${visibleHabits.map(h => {
+                                    let checked = !!(l.checks && l.checks[activeViewDate] && l.checks[activeViewDate][h.id]);
+                                    let clickAction = `toggleCheck('${l.id}', '${h.id}', '${activeViewDate}')`;
+                                    let isOverdue = isTodo && h.dueDate && h.dueDate < activeViewDate && !checked;
+                                    let isUpcoming = isTodo && h.dueDate && h.dueDate > activeViewDate;
+
+                                    let itemStyle = '';
+                                    let textStyle = '';
+                                    let subLabel = '';
+
+                                    if (checked) {
+                                        itemStyle = 'bg-[var(--bg)] opacity-75';
+                                        textStyle = 'line-through text-[var(--text-muted)]';
+                                        subLabel = 'Done';
+                                    } else if (isUpcoming) {
+                                        itemStyle = 'bg-[var(--bg)]/40 border-dashed opacity-60 cursor-default';
+                                        textStyle = 'text-[var(--text-muted)]';
+                                        subLabel = `Upcoming (${h.dueDate})`;
+                                    } else if (isOverdue) {
+                                        itemStyle = 'bg-red-500/10 border-red-500 ring-1 ring-red-400 cursor-pointer';
+                                        textStyle = 'text-[var(--text-main)] font-semibold';
+                                        subLabel = '⚠️ Overdue';
+                                    } else {
+                                        itemStyle = 'bg-[var(--bg)] hover:border-[var(--border-hover)] cursor-pointer';
+                                        textStyle = 'text-[var(--text-main)]';
+                                        subLabel = h.dueDate ? `Due: ${h.dueDate}` : 'Pending';
+                                    }
 
                                     return `
-                                        <div ${!isLocked ? `onclick="${clickAction}"` : ''} class="flex items-center justify-between text-xs bg-[var(--bg)] px-3 py-2 rounded-xl border border-[var(--border)] mt-1 ${!isLocked ? 'cursor-pointer hover:border-[var(--border-hover)]' : ''} ${itemStyle}" style="color: var(--text-main)">
+                                        <div ${isUpcoming ? '' : `onclick="${clickAction}"`} class="flex items-center justify-between text-xs px-3 py-2 rounded-xl border border-[var(--border)] mt-1 transition-all ${itemStyle}">
                                             <div class="flex items-center space-x-2 truncate">
-                                                <div class="w-4 h-4 rounded-md border flex items-center justify-center text-[10px] shrink-0 ${isLocked ? 'border-[var(--border)] bg-[var(--border)]/40 text-transparent' : (checked ? 'border-[var(--accent)] text-white' : 'border-[var(--border-hover)] bg-[var(--card)]')}" ${checked && !isLocked ? 'style="background-color: var(--accent)"' : ''}>${checked ? '✓' : ''}</div>
-                                                <span class="truncate">${h.text}</span>
+                                                <div class="w-4 h-4 rounded-md border flex items-center justify-center text-[10px] shrink-0 ${isUpcoming ? 'border-[var(--border)] bg-[var(--card)] text-transparent' : (checked ? 'border-[var(--accent)] text-white' : (isOverdue ? 'border-red-500 bg-red-500/20' : 'border-[var(--border-hover)] bg-[var(--card)]'))}" ${checked && !isUpcoming ? 'style="background-color: var(--accent)"' : ''}>${checked ? '✓' : ''}</div>
+                                                <span class="truncate ${textStyle}">${h.text}</span>
                                             </div>
-                                            <span class="text-[10px] shrink-0 ml-2" style="color: var(--text-muted)">${isLocked ? `Due: ${h.dueDate}` : (checked ? 'Done' : 'Pending')}</span>
+                                            <span class="text-[10px] shrink-0 ml-2 ${isOverdue ? 'text-red-500 font-semibold' : ''}" ${!isOverdue ? 'style="color: var(--text-muted)"' : ''}>${subLabel}</span>
                                         </div>
                                     `;
                                 }).join('')}
@@ -1016,8 +1230,14 @@
                         </div>
                         <div>
                             ${renderCalendarView(l)}
-                            <div class="pt-4 mt-4 border-t border-[var(--border)] flex justify-between text-xs" style="color: var(--text-muted)">
-                                ${isTodo ? `<span>Completed: <strong style="color: var(--text-main)">${st.completedDays}/${l.habits.length} tasks</strong></span>` : `<span>Streak: <strong style="color: var(--text-main)">${st.streak} days</strong></span><span>Completed: <strong style="color: var(--text-main)">${st.completedDays} days</strong></span>`}
+                            <div class="pt-4 mt-4 border-t border-[var(--border)] flex justify-between items-center text-xs" style="color: var(--text-muted)">
+                                <div>
+                                    ${isTodo ? `
+                                        <button onclick="openArchivedTasksModal('${l.id}')" class="px-3 py-1.5 rounded-xl border border-[var(--border)] bg-[var(--bg)] font-medium hover:opacity-85 transition-all flex items-center gap-1.5 shadow-sm" style="color: var(--text-main)">
+                                            <span>📁</span> Done/Archived (${doneHabitsCount})
+                                        </button>
+                                    ` : `<span>Streak: <strong style="color: var(--text-main)">${st.streak} days</strong></span>`}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1026,56 +1246,92 @@
             listsContainer.innerHTML = listsHtml || '<div class="col-span-2 text-center py-12 bg-[var(--card)] rounded-3xl border border-[var(--border)]" style="color: var(--text-muted)">No lists found. Click "+ New Goal List" in the top right to add one!</div>';
         }
 
+        function openArchivedTasksModal(listId) {
+            let list = appData.lists.find(l => l.id === listId);
+            if (!list) return;
+
+            let container = document.getElementById('archived-tasks-list-container');
+            let dayChecks = (list.checks && list.checks[activeViewDate]) ? list.checks[activeViewDate] : {};
+            let doneHabits = list.habits.filter(h => dayChecks[h.id]);
+
+            if (doneHabits.length === 0) {
+                container.innerHTML = `<div class="text-center py-8 text-xs italic" style="color: var(--text-muted)">No completed tasks for this date yet.</div>`;
+            } else {
+                let html = '';
+                doneHabits.forEach(h => {
+                    html += `
+                        <div class="flex items-center justify-between p-3 rounded-2xl border border-[var(--border)] bg-[var(--card)] transition-colors">
+                            <div class="flex items-center space-x-3 truncate">
+                                <div class="w-4 h-4 rounded-md border border-[var(--accent)] bg-[var(--accent)] text-white flex items-center justify-center text-[10px] shrink-0">✓</div>
+                                <span class="text-xs line-through truncate" style="color: var(--text-muted)">${h.text}</span>
+                            </div>
+                            <button onclick="toggleCheck('${list.id}', '${h.id}', '${activeViewDate}'); openArchivedTasksModal('${list.id}');" class="text-[11px] px-2.5 py-1 rounded-xl border border-[var(--border)] bg-[var(--bg)] font-medium hover:opacity-85 transition-all shrink-0 ml-2" style="color: var(--text-main)">
+                                Uncheck / Restore
+                            </button>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
+            }
+
+            document.getElementById('archived-tasks-modal').classList.remove('hidden');
+        }
+
+        function closeArchivedTasksModal() {
+            document.getElementById('archived-tasks-modal').classList.add('hidden');
+        }
+
         function toggleCheck(listId, habitId, dateStr) {
             let list = appData.lists.find(l => l.id === listId);
             if (!list) return;
             if (list.type !== 'todo' && isDateFrozen(list, dateStr)) return;
+
+            if (list.type === 'todo') {
+                let habit = list.habits.find(h => h.id === habitId);
+                if (habit && habit.dueDate && habit.dueDate > dateStr) return;
+            }
+
             if (!list.checks) list.checks = {};
             if (!list.checks[dateStr]) list.checks[dateStr] = {};
             
-            list.checks[dateStr][habitId] = !list.checks[dateStr][habitId];
-            
-            processMissedDays();
-            saveData();
-            renderApp();
-        }
-
-        function toggleTodo(listId, habitId) {
-            let list = appData.lists.find(l => l.id === listId);
-            if (!list) return;
-            if (!list.checks) list.checks = {};
-            if (!list.checks['todo']) list.checks['todo'] = {};
-            
-            let habit = list.habits.find(h => h.id === habitId);
-            let todayStr = getLocalDateStr();
-            if (habit && habit.dueDate && habit.dueDate > todayStr) return;
-
-            let currentStatus = !!list.checks['todo'][habitId];
+            let currentStatus = !!list.checks[dateStr][habitId];
             let newStatus = !currentStatus;
-            list.checks['todo'][habitId] = newStatus;
+            list.checks[dateStr][habitId] = newStatus;
 
-            if (newStatus && habit && habit.intervalValue && habit.intervalUnit) {
+            let habit = list.habits.find(h => h.id === habitId);
+            
+            if (list.type === 'todo' && newStatus && !currentStatus && habit && habit.intervalValue && habit.intervalUnit && habit.intervalUnit !== 'none') {
                 let val = parseInt(habit.intervalValue);
                 let unit = habit.intervalUnit;
-                let baseDate = habit.dueDate ? parseLocalDate(habit.dueDate) : new Date();
+                let baseDate = habit.dueDate ? parseLocalDate(habit.dueDate) : parseLocalDate(dateStr);
 
                 if (unit === 'days') baseDate.setDate(baseDate.getDate() + val);
                 else if (unit === 'weeks') baseDate.setDate(baseDate.getDate() + (val * 7));
                 else if (unit === 'months') baseDate.setMonth(baseDate.getMonth() + val);
 
-                habit.dueDate = getLocalDateStr(baseDate);
-                list.checks['todo'][habitId] = false;
+                let nextDueDateStr = getLocalDateStr(baseDate);
 
-                list.habits = list.habits.filter(h => h.id !== habitId);
-                list.habits.push(habit);
+                let duplicateExists = list.habits.some(h => h.text === habit.text && h.dueDate === nextDueDateStr && !(list.checks[dateStr] && list.checks[dateStr][h.id]));
+                
+                if (!duplicateExists) {
+                    let newRecurringTask = {
+                        id: 't-' + Date.now(),
+                        text: habit.text,
+                        dueDate: nextDueDateStr,
+                        intervalValue: habit.intervalValue,
+                        intervalUnit: habit.intervalUnit
+                    };
+                    list.habits.push(newRecurringTask);
+                }
             }
 
+            processMissedDays();
             saveData();
             renderApp();
 
             if (list.type === 'todo') {
-                let activeHabits = list.habits.filter(h => !h.dueDate || h.dueDate <= todayStr);
-                let allDone = activeHabits.length > 0 && activeHabits.every(h => !!list.checks['todo'][h.id]);
+                let activeHabits = list.habits.filter(h => !h.dueDate || h.dueDate <= dateStr);
+                let allDone = activeHabits.length > 0 && activeHabits.every(h => !!list.checks[dateStr][h.id]);
                 if (allDone) {
                     showCompletionModal(list.id);
                 }
@@ -1127,7 +1383,6 @@
             let list = appData.lists.find(l => l.id === listId);
             if (!list || !list.freezes) return;
             
-            // Remove active date freeze
             list.freezes = list.freezes.filter(d => d !== activeViewDate);
             
             processMissedDays();
@@ -1186,38 +1441,49 @@
                         <div class="habit-row flex items-center gap-2">
                             <input type="hidden" class="habit-id-input" value="${item.id || ''}">
                             <input type="text" placeholder="e.g. Drink water or Read 10 pages" value="${item.text || ''}" class="habit-text-input flex-1 bg-[var(--card)] border border-[var(--border)] rounded-xl px-3 py-2 text-sm outline-none transition-colors" style="color: var(--text-main)" required>
-                            <button type="button" onclick="this.closest('.habit-row').remove()" class="text-xs text-red-600 px-2 py-1 hover:bg-red-50 rounded-lg">✕</button>
+                            <button type="button" onclick="this.closest('.habit-row').remove()" class="text-xs text-red-500 px-2 py-1 hover:bg-red-500/10 rounded-lg">✕</button>
                         </div>
                     `;
                 });
                 container.innerHTML = html;
             } else {
                 let html = '';
-                if (!items || items.length === 0) items = [{ id: '', text: '', dueDate: getLocalDateStr(), intervalValue: '', intervalUnit: 'weeks' }];
+                if (!items || items.length === 0) items = [{ id: '', text: '', dueDate: null, intervalValue: '1', intervalUnit: 'none' }];
                 items.forEach((item) => {
+                    let hasDate = !!item.dueDate;
+                    let hasRecurrence = item.intervalUnit && item.intervalUnit !== 'none';
+                    let dueDateVal = item.dueDate || getLocalDateStr();
+
                     html += `
                         <div class="task-row bg-[var(--card)] p-3 rounded-2xl border border-[var(--border)] space-y-2 transition-colors">
                             <input type="hidden" class="task-id-input" value="${item.id || ''}">
                             <div class="flex items-center gap-2">
                                 <input type="text" placeholder="Task name (e.g. Change bed sheets)" value="${item.text || ''}" class="task-text-input flex-1 bg-[var(--bg)] border border-[var(--border)] rounded-xl px-3 py-1.5 text-sm outline-none" style="color: var(--text-main)" required>
-                                <button type="button" onclick="this.closest('.task-row').remove()" class="text-xs text-red-600 px-2 py-1 hover:bg-red-50 rounded-lg">✕</button>
+                                <button type="button" onclick="this.closest('.task-row').remove()" class="text-xs text-red-500 px-2 py-1 hover:bg-red-500/10 rounded-lg">✕</button>
                             </div>
-                            <div class="grid grid-cols-3 gap-2">
+                            <div class="flex items-center gap-2 pt-1">
+                                <label class="flex items-center gap-1.5 text-xs font-medium cursor-pointer" style="color: var(--text-main)">
+                                    <input type="checkbox" class="task-has-date text-xs rounded border-[var(--border)]" onchange="toggleTaskDateOptions(this)" ${hasDate ? 'checked' : ''}>
+                                    Set Target Date
+                                </label>
+                            </div>
+                            <div class="task-date-options grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 ${hasDate ? '' : 'hidden'}">
                                 <div>
                                     <label class="block text-[10px] uppercase font-semibold mb-0.5" style="color: var(--text-muted)">Target Date</label>
-                                    <input type="date" value="${item.dueDate || getLocalDateStr()}" class="task-date-input w-full bg-[var(--bg)] border border-[var(--border)] rounded-xl px-2 py-1 text-xs outline-none" style="color: var(--text-main)">
+                                    <input type="date" value="${dueDateVal}" class="task-date-input w-full bg-[var(--bg)] border border-[var(--border)] rounded-xl px-2 py-1 text-xs outline-none" style="color: var(--text-main)">
                                 </div>
                                 <div>
-                                    <label class="block text-[10px] uppercase font-semibold mb-0.5" style="color: var(--text-muted)">Repeat Every</label>
-                                    <input type="number" min="1" placeholder="e.g. 3" value="${item.intervalValue || ''}" class="task-interval-val w-full bg-[var(--bg)] border border-[var(--border)] rounded-xl px-2 py-1 text-xs outline-none" style="color: var(--text-main)">
-                                </div>
-                                <div>
-                                    <label class="block text-[10px] uppercase font-semibold mb-0.5" style="color: var(--text-muted)">Interval Unit</label>
-                                    <select class="task-interval-unit w-full bg-[var(--bg)] border border-[var(--border)] rounded-xl px-2 py-1 text-xs outline-none" style="color: var(--text-main)">
-                                        <option value="days" ${item.intervalUnit === 'days' ? 'selected' : ''}>Days</option>
-                                        <option value="weeks" ${item.intervalUnit === 'weeks' || !item.intervalUnit ? 'selected' : ''}>Weeks</option>
-                                        <option value="months" ${item.intervalUnit === 'months' ? 'selected' : ''}>Months</option>
+                                    <label class="block text-[10px] uppercase font-semibold mb-0.5" style="color: var(--text-muted)">Repeat</label>
+                                    <select class="task-interval-unit w-full bg-[var(--bg)] border border-[var(--border)] rounded-xl px-2 py-1 text-xs outline-none" onchange="toggleTaskRecurrenceOptions(this)" style="color: var(--text-main)">
+                                        <option value="none" ${!hasRecurrence ? 'selected' : ''}>Does not repeat</option>
+                                        <option value="days" ${item.intervalUnit === 'days' ? 'selected' : ''}>Repeat Every (Days)</option>
+                                        <option value="weeks" ${item.intervalUnit === 'weeks' ? 'selected' : ''}>Repeat Every (Weeks)</option>
+                                        <option value="months" ${item.intervalUnit === 'months' ? 'selected' : ''}>Repeat Every (Months)</option>
                                     </select>
+                                </div>
+                                <div class="task-recurrence-options sm:col-span-2 ${hasRecurrence ? '' : 'hidden'}">
+                                    <label class="block text-[10px] uppercase font-semibold mb-0.5" style="color: var(--text-muted)">Interval Count (e.g., Every 2 weeks)</label>
+                                    <input type="number" min="1" placeholder="1" value="${item.intervalValue || 1}" class="task-interval-val w-full bg-[var(--bg)] border border-[var(--border)] rounded-xl px-2 py-1 text-xs outline-none" style="color: var(--text-main)">
                                 </div>
                             </div>
                         </div>
@@ -1236,7 +1502,7 @@
                 div.innerHTML = `
                     <input type="hidden" class="habit-id-input" value="">
                     <input type="text" placeholder="e.g. Drink water or Read 10 pages" class="habit-text-input flex-1 bg-[var(--card)] border border-[var(--border)] rounded-xl px-3 py-2 text-sm outline-none transition-colors" style="color: var(--text-main)" required>
-                    <button type="button" onclick="this.closest('.habit-row').remove()" class="text-xs text-red-600 px-2 py-1 hover:bg-red-50 rounded-lg">✕</button>
+                    <button type="button" onclick="this.closest('.habit-row').remove()" class="text-xs text-red-500 px-2 py-1 hover:bg-red-500/10 rounded-lg">✕</button>
                 `;
             } else {
                 div.className = "task-row bg-[var(--card)] p-3 rounded-2xl border border-[var(--border)] space-y-2 transition-colors";
@@ -1244,24 +1510,31 @@
                     <input type="hidden" class="task-id-input" value="">
                     <div class="flex items-center gap-2">
                         <input type="text" placeholder="Task name (e.g. Change bed sheets)" class="task-text-input flex-1 bg-[var(--bg)] border border-[var(--border)] rounded-xl px-3 py-1.5 text-sm outline-none" style="color: var(--text-main)" required>
-                        <button type="button" onclick="this.closest('.task-row').remove()" class="text-xs text-red-600 px-2 py-1 hover:bg-red-50 rounded-lg">✕</button>
+                        <button type="button" onclick="this.closest('.task-row').remove()" class="text-xs text-red-500 px-2 py-1 hover:bg-red-500/10 rounded-lg">✕</button>
                     </div>
-                    <div class="grid grid-cols-3 gap-2">
+                    <div class="flex items-center gap-2 pt-1">
+                        <label class="flex items-center gap-1.5 text-xs font-medium cursor-pointer" style="color: var(--text-main)">
+                            <input type="checkbox" class="task-has-date text-xs rounded border-[var(--border)]" onchange="toggleTaskDateOptions(this)">
+                            Set Target Date
+                        </label>
+                    </div>
+                    <div class="task-date-options grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 hidden">
                         <div>
                             <label class="block text-[10px] uppercase font-semibold mb-0.5" style="color: var(--text-muted)">Target Date</label>
                             <input type="date" value="${getLocalDateStr()}" class="task-date-input w-full bg-[var(--bg)] border border-[var(--border)] rounded-xl px-2 py-1 text-xs outline-none" style="color: var(--text-main)">
                         </div>
                         <div>
-                            <label class="block text-[10px] uppercase font-semibold mb-0.5" style="color: var(--text-muted)">Repeat Every</label>
-                            <input type="number" min="1" placeholder="e.g. 3" class="task-interval-val w-full bg-[var(--bg)] border border-[var(--border)] rounded-xl px-2 py-1 text-xs outline-none" style="color: var(--text-main)">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] uppercase font-semibold mb-0.5" style="color: var(--text-muted)">Interval Unit</label>
-                            <select class="task-interval-unit w-full bg-[var(--bg)] border border-[var(--border)] rounded-xl px-2 py-1 text-xs outline-none" style="color: var(--text-main)">
-                                <option value="days">Days</option>
-                                <option value="weeks" selected>Weeks</option>
-                                <option value="months">Months</option>
+                            <label class="block text-[10px] uppercase font-semibold mb-0.5" style="color: var(--text-muted)">Repeat</label>
+                            <select class="task-interval-unit w-full bg-[var(--bg)] border border-[var(--border)] rounded-xl px-2 py-1 text-xs outline-none" onchange="toggleTaskRecurrenceOptions(this)" style="color: var(--text-main)">
+                                <option value="none" selected>Does not repeat</option>
+                                <option value="days">Repeat Every (Days)</option>
+                                <option value="weeks">Repeat Every (Weeks)</option>
+                                <option value="months">Repeat Every (Months)</option>
                             </select>
+                        </div>
+                        <div class="task-recurrence-options sm:col-span-2 hidden">
+                            <label class="block text-[10px] uppercase font-semibold mb-0.5" style="color: var(--text-muted)">Interval Count (e.g., Every 2 weeks)</label>
+                            <input type="number" min="1" placeholder="1" value="1" class="task-interval-val w-full bg-[var(--bg)] border border-[var(--border)] rounded-xl px-2 py-1 text-xs outline-none" style="color: var(--text-main)">
                         </div>
                     </div>
                 `;
@@ -1277,8 +1550,7 @@
             document.getElementById('input-startdate').value = getLocalDateStr();
             document.getElementById('input-freeze-count').value = '2';
             document.getElementById('input-freeze-duration').value = '7';
-            setListType('habit');
-            renderTaskInputRows([]);
+            setListType('habit', false);
             document.getElementById('app-modal').classList.remove('hidden');
         }
 
@@ -1295,7 +1567,7 @@
             document.getElementById('input-freeze-count').value = list.freezeCount !== undefined ? list.freezeCount : 2;
             document.getElementById('input-freeze-duration').value = list.freezeDuration !== undefined ? list.freezeDuration : 7;
             
-            setListType(list.type || 'habit');
+            setListType(list.type || 'habit', true);
             renderTaskInputRows(list.habits);
             document.getElementById('app-modal').classList.remove('hidden');
         }
@@ -1332,16 +1604,18 @@
                 rows.forEach((row, index) => {
                     let existingId = row.querySelector('.task-id-input').value;
                     let text = row.querySelector('.task-text-input').value.trim();
-                    let dueDate = row.querySelector('.task-date-input').value;
-                    let intervalValue = row.querySelector('.task-interval-val').value;
+                    let hasDate = row.querySelector('.task-has-date').checked;
+                    let dueDate = hasDate ? row.querySelector('.task-date-input').value : null;
                     let intervalUnit = row.querySelector('.task-interval-unit').value;
+                    let intervalValue = row.querySelector('.task-interval-val').value;
+
                     if (text) {
                         habits.push({
                             id: existingId || ('t-' + index + '-' + Date.now()),
                             text,
-                            dueDate: dueDate || getLocalDateStr(),
-                            intervalValue: intervalValue ? parseInt(intervalValue) : '',
-                            intervalUnit
+                            dueDate: hasDate ? (dueDate || getLocalDateStr()) : null,
+                            intervalValue: (hasDate && intervalUnit !== 'none') ? (parseInt(intervalValue) || 1) : null,
+                            intervalUnit: hasDate ? intervalUnit : 'none'
                         });
                     }
                 });
