@@ -967,9 +967,12 @@
 
                     let tasksHtml = '';
                     let activeTasksForView = list.tasks;
-
                     if (list.type === 'todo') {
-                        activeTasksForView = list.tasks.filter(t => !t.date || t.date === activeViewDate);
+                        activeTasksForView = [...list.tasks].sort((a, b) => {
+                            let aFuture = a.date && a.date > activeViewDate ? 1 : 0;
+                            let bFuture = b.date && b.date > activeViewDate ? 1 : 0;
+                            return aFuture - bFuture;
+                        }).filter(t => !t.date || t.date <= activeViewDate);
                     }
 
                     if (activeTasksForView.length === 0) {
@@ -977,14 +980,23 @@
                     } else {
                         activeTasksForView.forEach(task => {
                             let isDone = task.completedDays && task.completedDays[activeViewDate];
+                            let isOverdue = !isDone && task.date && task.date < activeViewDate;
+                            
                             let dateBadge = task.date ? `<span class="text-[10px] px-2 py-0.5 rounded-md bg-[var(--bg)] border border-[var(--border)] ml-2" style="color: var(--text-muted)">📅 ${task.date}</span>` : '';
                             
+                            let cardStyle = isOverdue 
+                                ? `background-color: var(--badge-bg); border-color: var(--accent);` 
+                                : `background-color: var(--bg); border-color: var(--border);`;
+
+                            let overdueLabel = isOverdue ? `<span class="text-[10px] font-bold px-2 py-0.5 rounded bg-[var(--accent)] text-[var(--accent-text)] ml-2">Overdue</span>` : '';
+
                             tasksHtml += `
-                                <div class="flex items-center justify-between p-3 rounded-xl border border-[var(--border)] bg-[var(--bg)] transition-colors">
+                                <div class="flex items-center justify-between p-3 rounded-xl border transition-colors" style="${cardStyle}">
                                     <div class="flex items-center space-x-3">
                                         <input type="checkbox" ${isDone ? 'checked' : ''} onchange="toggleTaskCompletion('${list.id}', '${task.id}', '${activeViewDate}')" class="w-4 h-4 rounded accent-[var(--accent)] cursor-pointer">
-                                        <span class="text-sm font-medium ${isDone ? 'line-through opacity-50' : ''}" style="color: var(--text-main)">${task.name}</span>
+                                        <span class="text-sm font-semibold ${isDone ? 'line-through opacity-50' : ''}" style="color: var(--text-main)">${task.name}</span>
                                         ${dateBadge}
+                                        ${overdueLabel}
                                     </div>
                                     <span class="text-xs font-medium">${isDone ? '✨ Done' : ''}</span>
                                 </div>
