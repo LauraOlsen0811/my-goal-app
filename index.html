@@ -457,9 +457,9 @@
                     </div>
                     <p class="text-[10px]" style="color: var(--text-muted)">Allows you to freeze streaks for trips or rest without breaking your progress record.</p>
                 </div>
-                <div id="startdate-container" class="p-3 rounded-2xl border border-[var(--border)] space-y-3 transition-colors">
+                <div id="startdate-container" class="bg-[var(--card)] p-3 rounded-2xl border border-[var(--border)] space-y-3 transition-colors w-full">
                     <label class="block text-xs font-semibold uppercase mb-1" style="color: var(--text-muted)">Start Date</label>
-                    <input type="date" id="input-startdate" required class="w-full bg-[var(--card)] border border-[var(--border)] rounded-xl px-3 py-2 text-sm outline-none transition-colors" style="color: var(--text-main); box-sizing: border-box; max-width: 100%;">
+                    <input type="date" id="input-startdate" required class="w-full bg-[var(--bg)] border border-[var(--border)] rounded-xl px-2 py-1.5 text-xs outline-none transition-colors" style="color: var(--text-main); box-sizing: border-box; min-width: 0; max-width: 100%;">
                 </div>
                 <div>
                     <label class="block text-xs font-semibold uppercase mb-1" id="habits-label" style="color: var(--text-muted)">Habits / Tasks</label>
@@ -1559,7 +1559,7 @@
                     <div class="task-date-options grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1 hidden">
                         <div>
                             <label class="block text-[10px] uppercase font-semibold mb-0.5" style="color: var(--text-muted)">Target Date</label>
-                            <input type="date" value="${getLocalDateStr()}" class="task-date-input w-full bg-[var(--bg)] border border-[var(--border)] rounded-xl px-2 py-1 text-xs outline-none" style="color: var(--text-main)">
+                            <input type="date" value="${getLocalDateStr()}" class="task-date-input w-full bg-[var(--bg)] border border-[var(--border)] rounded-xl px-2 py-1 text-xs outline-none" style="color: var(--text-main); box-sizing: border-box; min-width: 0; max-width: 100%;">
                         </div>
                         <div>
                             <label class="block text-[10px] uppercase font-semibold mb-0.5" style="color: var(--text-muted)">Repeat</label>
