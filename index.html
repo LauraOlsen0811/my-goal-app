@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="manifest" href="manifest.json">
-    <title>Aura — Cozy Habit & Goal Tracker</title>
+    <title>Aura </title>
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -123,6 +123,18 @@
             localStorage.setItem('aura_dark_mode', isDarkMode);
             const currentThemeName = localStorage.getItem('aura_theme') || 'cozy';
             setTheme(currentThemeName);
+
+            // Update settings modal icon/text if loaded
+            const darkIcon = document.getElementById('dark-mode-icon');
+            if (darkIcon) darkIcon.innerText = isDarkMode ? '☀️' : '🌙';
+            const darkText = document.getElementById('dark-mode-text');
+            if (darkText) darkText.innerText = isDarkMode ? 'Light Mode' : 'Dark Mode';
+
+            // Update welcome modal icon/text if loaded
+            const welcomeIcon = document.getElementById('welcome-dark-mode-icon');
+            if (welcomeIcon) welcomeIcon.innerText = isDarkMode ? '☀️' : '🌙';
+            const welcomeText = document.getElementById('welcome-dark-mode-text');
+            if (welcomeText) welcomeText.innerText = isDarkMode ? 'Light Mode' : 'Dark Mode';
         }
 
         function setTheme(themeName) {
@@ -160,6 +172,16 @@
             const darkText = document.getElementById('dark-mode-text');
             if (darkText) {
                 darkText.innerText = isDarkMode ? 'Light Mode' : 'Dark Mode';
+            }
+
+            // Update mode toggle icon visuals inside welcome modal if loaded
+            const welcomeIcon = document.getElementById('welcome-dark-mode-icon');
+            if (welcomeIcon) {
+                welcomeIcon.innerText = isDarkMode ? '☀️' : '🌙';
+            }
+            const welcomeText = document.getElementById('welcome-dark-mode-text');
+            if (welcomeText) {
+                welcomeText.innerText = isDarkMode ? 'Light Mode' : 'Dark Mode';
             }
             
             renderApp();
@@ -216,6 +238,12 @@
                         <button type="button" onclick="selectWelcomeTheme('pink', this)" data-wtheme="pink" class="welcome-theme-btn p-3 rounded-2xl border border-[var(--border)] bg-[#F5ECEF] text-center text-xs font-medium text-[#362228] transition-all">Soft Pink</button>
                         <button type="button" onclick="selectWelcomeTheme('blue', this)" data-wtheme="blue" class="welcome-theme-btn p-3 rounded-2xl border border-[var(--border)] bg-[#EBF1F7] text-center text-xs font-medium text-[#1A2936] transition-all">Ocean Blue</button>
                     </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold uppercase mb-1" style="color: var(--text-muted)">Display Mode</label>
+                    <button type="button" onclick="toggleDarkMode()" class="w-full text-xs font-medium px-3 py-2.5 rounded-xl border border-[var(--border)] bg-[var(--card)] hover:opacity-80 transition-all flex items-center justify-center gap-2" style="color: var(--text-main)">
+                        <span id="welcome-dark-mode-icon">🌙</span> <span id="welcome-dark-mode-text">Dark Mode</span>
+                    </button>
                 </div>
                 <button type="submit" class="w-full py-3 rounded-full text-xs font-semibold uppercase tracking-wider transition-all shadow-sm mt-2" style="background-color: var(--accent); color: var(--accent-text)">
                     Enter Your Sanctuary ✨
@@ -634,6 +662,13 @@
             document.getElementById('welcome-username').value = appData.userName || '';
             document.getElementById('welcome-sanctuary').value = appData.sanctuaryName && appData.sanctuaryName !== "Today's Sanctuary" ? appData.sanctuaryName : '';
             selectedWelcomeThemeName = appData.theme || 'cozy';
+            
+            // Sync the welcome modal toggle text/icon with current isDarkMode state
+            const welcomeIcon = document.getElementById('welcome-dark-mode-icon');
+            if (welcomeIcon) welcomeIcon.innerText = isDarkMode ? '☀️' : '🌙';
+            const welcomeText = document.getElementById('welcome-dark-mode-text');
+            if (welcomeText) welcomeText.innerText = isDarkMode ? 'Light Mode' : 'Dark Mode';
+
             document.querySelectorAll('.welcome-theme-btn').forEach(b => {
                 if (b.dataset.wtheme === selectedWelcomeThemeName) {
                     b.classList.add('ring-2', 'ring-[var(--accent)]');
