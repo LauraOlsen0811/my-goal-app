@@ -406,74 +406,77 @@
     </div>
 
     <!-- Modal Form (Create / Edit) -->
-    <div id="app-modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-[var(--bg)] rounded-3xl max-w-md w-full p-6 border border-[var(--border)] shadow-xl relative max-h-[90vh] overflow-y-auto transition-colors">
-            <h3 id="modal-title" class="text-lg font-semibold mb-4" style="color: var(--text-main)">Create New Goal List</h3>
-            <form onsubmit="handleFormSubmit(event)" class="space-y-4">
-                <input type="hidden" id="input-edit-id">
-                <div>
-                    <label class="block text-xs font-semibold uppercase mb-1" style="color: var(--text-muted)">List Type</label>
-                    <div class="grid grid-cols-2 gap-2">
-                        <button type="button" id="type-habit" onclick="setListType('habit')" class="py-2 text-xs font-medium rounded-xl border transition-all">Habit Tracker</button>
-                        <button type="button" id="type-todo" onclick="setListType('todo')" class="py-2 text-xs font-medium rounded-xl border transition-all">To-Do / Task List</button>
-                    </div>
+<div id="app-modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-[var(--bg)] rounded-3xl max-w-md w-full p-6 border border-[var(--border)] shadow-xl relative max-h-[90vh] overflow-y-auto transition-colors">
+        <h3 id="modal-title" class="text-lg font-semibold mb-4" style="color: var(--text-main)">Create New Goal List</h3>
+        <form onsubmit="handleFormSubmit(event)" class="space-y-4">
+            <input type="hidden" id="input-edit-id">
+            <div>
+                <label class="block text-xs font-semibold uppercase mb-1" style="color: var(--text-muted)">List Type</label>
+                <div class="grid grid-cols-2 gap-2">
+                    <button type="button" id="type-habit" onclick="setListType('habit')" class="py-2 text-xs font-medium rounded-xl border transition-all">Habit Tracker</button>
+                    <button type="button" id="type-todo" onclick="setListType('todo')" class="py-2 text-xs font-medium rounded-xl border transition-all">To-Do / Task List</button>
                 </div>
+            </div>
+            <div>
+                <label class="block text-xs font-semibold uppercase mb-1" style="color: var(--text-muted)">List Title</label>
+                <input type="text" id="input-title" required placeholder="e.g., Fitness Challenge or Home Chores" class="w-full bg-[var(--card)] border border-[var(--border)] rounded-xl px-3 py-2 text-sm outline-none transition-colors" style="color: var(--text-main)">
+            </div>
+            <div class="grid grid-cols-2 gap-3">
                 <div>
-                    <label class="block text-xs font-semibold uppercase mb-1" style="color: var(--text-muted)">List Title</label>
-                    <input type="text" id="input-title" required placeholder="e.g., Fitness Challenge or Home Chores" class="w-full bg-[var(--card)] border border-[var(--border)] rounded-xl px-3 py-2 text-sm outline-none transition-colors" style="color: var(--text-main)">
+                    <label class="block text-xs font-semibold uppercase mb-1" style="color: var(--text-muted)">Symbol / Emoji</label>
+                    <select id="input-category" class="w-full bg-[var(--card)] border border-[var(--border)] rounded-xl px-3 py-2 text-sm outline-none transition-colors" style="color: var(--text-main)">
+                        <option value="🌿">🌿 Wellness</option>
+                        <option value="⚡">⚡ Productivity</option>
+                        <option value="🧘">🧘 Mindfulness</option>
+                        <option value="☕">☕ Lifestyle</option>
+                        <option value="💧">💧 Hydration</option>
+                        <option value="🏃">🏃 Fitness</option>
+                        <option value="📚">📚 Learning</option>
+                        <option value="🏡">🏡 Home & Chores</option>
+                        <option value="✨">✨ Magic</option>
+                    </select>
                 </div>
-                <div class="grid grid-cols-2 gap-3">
+                <div id="duration-container">
+                    <label class="block text-xs font-semibold uppercase mb-1" style="color: var(--text-muted)">Duration (Days)</label>
+                    <input type="number" id="input-duration" value="30" min="1" max="365" required class="w-full bg-[var(--card)] border border-[var(--border)] rounded-xl px-3 py-2 text-sm outline-none transition-colors" style="color: var(--text-main)">
+                </div>
+            </div>
+
+            <div id="freeze-config-container" class="bg-[var(--card)] p-3 rounded-2xl border border-[var(--border)] space-y-3 transition-colors">
+                <div class="text-xs font-semibold uppercase" style="color: var(--text-main)">🛡️ Streak Freezes (Vacation / Rest)</div>
+                <div class="grid grid-cols-2 gap-2">
                     <div>
-                        <label class="block text-xs font-semibold uppercase mb-1" style="color: var(--text-muted)">Symbol / Emoji</label>
-                        <select id="input-category" class="w-full bg-[var(--card)] border border-[var(--border)] rounded-xl px-3 py-2 text-sm outline-none transition-colors" style="color: var(--text-main)">
-                            <option value="🌿">🌿 Wellness</option>
-                            <option value="⚡">⚡ Productivity</option>
-                            <option value="🧘">🧘 Mindfulness</option>
-                            <option value="☕">☕ Lifestyle</option>
-                            <option value="💧">💧 Hydration</option>
-                            <option value="🏃">🏃 Fitness</option>
-                            <option value="📚">📚 Learning</option>
-                            <option value="🏡">🏡 Home & Chores</option>
-                            <option value="✨">✨ Magic</option>
-                        </select>
+                        <label class="block text-[10px] uppercase font-semibold mb-1" style="color: var(--text-muted)">Allowed Freezes</label>
+                        <input type="number" id="input-freeze-count" value="2" min="0" max="30" class="w-full bg-[var(--bg)] border border-[var(--border)] rounded-xl px-2 py-1.5 text-xs outline-none" style="color: var(--text-main)">
                     </div>
-                    <div id="duration-container">
-                        <label class="block text-xs font-semibold uppercase mb-1" style="color: var(--text-muted)">Duration (Days)</label>
-                        <input type="number" id="input-duration" value="30" min="1" max="365" required class="w-full bg-[var(--card)] border border-[var(--border)] rounded-xl px-3 py-2 text-sm outline-none transition-colors" style="color: var(--text-main)">
+                    <div>
+                        <label class="block text-[10px] uppercase font-semibold mb-1" style="color: var(--text-muted)">Max Days per Freeze</label>
+                        <input type="number" id="input-freeze-duration" value="7" min="1" max="30" class="w-full bg-[var(--bg)] border border-[var(--border)] rounded-xl px-2 py-1.5 text-xs outline-none" style="color: var(--text-main)">
                     </div>
                 </div>
+                <p class="text-[10px]" style="color: var(--text-muted)">Allows you to freeze streaks for trips or rest without breaking your progress record.</p>
+            </div>
 
-                <div id="freeze-config-container" class="bg-[var(--card)] p-3 rounded-2xl border border-[var(--border)] space-y-3 transition-colors">
-                    <div class="text-xs font-semibold uppercase" style="color: var(--text-main)">🛡️ Streak Freezes (Vacation / Rest)</div>
-                    <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label class="block text-[10px] uppercase font-semibold mb-1" style="color: var(--text-muted)">Allowed Freezes</label>
-                            <input type="number" id="input-freeze-count" value="2" min="0" max="30" class="w-full bg-[var(--bg)] border border-[var(--border)] rounded-xl px-2 py-1.5 text-xs outline-none" style="color: var(--text-main)">
-                        </div>
-                        <div>
-                            <label class="block text-[10px] uppercase font-semibold mb-1" style="color: var(--text-muted)">Max Days per Freeze</label>
-                            <input type="number" id="input-freeze-duration" value="7" min="1" max="30" class="w-full bg-[var(--bg)] border border-[var(--border)] rounded-xl px-2 py-1.5 text-xs outline-none" style="color: var(--text-main)">
-                        </div>
-                    </div>
-                    <p class="text-[10px]" style="color: var(--text-muted)">Allows you to freeze streaks for trips or rest without breaking your progress record.</p>
-                </div>
+            <div id="startdate-container">
+                <label class="block text-xs font-semibold uppercase mb-1" style="color: var(--text-muted)">Start Date</label>
+                <input type="date" id="input-startdate" required class="w-full bg-[var(--card)] border border-[var(--border)] rounded-xl px-3 py-2 text-sm outline-none transition-colors" style="color: var(--text-main);">
+            </div>
 
-                <div id="startdate-container">
-                    <label class="block text-xs font-semibold uppercase mb-1" style="color: var(--text-muted)">Start Date</label>
-                    <input type="date" id="input-startdate" required class="w-full bg-[var(--card)] border border-[var(--border)] rounded-xl px-3 py-2 text-sm outline-none transition-colors" style="color: var(--text-main);">
-                </div>
-                    <label class="block text-xs font-semibold uppercase mb-1" id="habits-label" style="color: var(--text-muted)">Habits / Tasks</label>
-                    <div id="tasks-input-container" class="space-y-2"></div>
-                    <button type="button" id="add-item-btn" onclick="addTaskInputRow()" class="mt-2 text-xs font-medium bg-[var(--card)] border border-[var(--border)] px-3 py-1.5 rounded-xl transition-all" style="color: var(--text-main)">+ Add Item</button>
-                    <p class="text-[10px] mt-1" id="habits-hint" style="color: var(--text-muted)"></p>
-                </div>
-                <div class="flex justify-end space-x-2 pt-2">
-                    <button type="button" onclick="closeModal()" class="px-4 py-2 text-xs font-medium" style="color: var(--text-muted)">Cancel</button>
-                    <button type="submit" class="px-5 py-2 rounded-full text-xs font-medium transition-all" style="background-color: var(--accent); color: var(--accent-text)">Save List</button>
-                </div>
-            </form>
-        </div>
+            <div>
+                <label class="block text-xs font-semibold uppercase mb-1" id="habits-label" style="color: var(--text-muted)">Habits / Tasks</label>
+                <div id="tasks-input-container" class="space-y-2"></div>
+                <button type="button" id="add-item-btn" onclick="addTaskInputRow()" class="mt-2 text-xs font-medium bg-[var(--card)] border border-[var(--border)] px-3 py-1.5 rounded-xl transition-all" style="color: var(--text-main)">+ Add Item</button>
+                <p class="text-[10px] mt-1" id="habits-hint" style="color: var(--text-muted)"></p>
+            </div>
+
+            <div class="flex justify-end space-x-2 pt-2">
+                <button type="button" onclick="closeModal()" class="px-4 py-2 text-xs font-medium" style="color: var(--text-muted)">Cancel</button>
+                <button type="submit" class="px-5 py-2 rounded-full text-xs font-medium transition-all" style="background-color: var(--accent); color: var(--accent-text)">Save List</button>
+            </div>
+        </form>
     </div>
+</div>
 
     <!-- Completion Modal -->
     <div id="completion-modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
