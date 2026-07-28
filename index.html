@@ -972,7 +972,7 @@
                             let aFuture = a.date && a.date > activeViewDate ? 1 : 0;
                             let bFuture = b.date && b.date > activeViewDate ? 1 : 0;
                             return aFuture - bFuture;
-                        });
+                        }).filter(t => !t.date || t.date === activeViewDate || t.date > activeViewDate);
                     }
                     if (activeTasksForView.length === 0) {
                         tasksHtml = `<p class="text-xs italic" style="color: var(--text-muted)">No tasks scheduled for this specific date.</p>`;
