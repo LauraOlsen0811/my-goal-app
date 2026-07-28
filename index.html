@@ -967,14 +967,13 @@
 
                     let tasksHtml = '';
                     let activeTasksForView = list.tasks;
-                    if (list.type === 'todo') {
+                   if (list.type === 'todo') {
                         activeTasksForView = [...list.tasks].sort((a, b) => {
                             let aFuture = a.date && a.date > activeViewDate ? 1 : 0;
                             let bFuture = b.date && b.date > activeViewDate ? 1 : 0;
                             return aFuture - bFuture;
-                        }).filter(t => !t.date || t.date <= activeViewDate);
+                        });
                     }
-
                     if (activeTasksForView.length === 0) {
                         tasksHtml = `<p class="text-xs italic" style="color: var(--text-muted)">No tasks scheduled for this specific date.</p>`;
                     } else {
