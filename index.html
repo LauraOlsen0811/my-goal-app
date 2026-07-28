@@ -102,8 +102,8 @@
 <body class="min-h-screen flex flex-col antialiased">
 
     <!-- Welcome / Onboarding Modal (First Load or Reset) -->
-    <div id="welcome-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 sm:p-4">
-        <div class="bg-[var(--bg)] rounded-3xl max-w-md w-full p-6 sm:p-8 border border-[var(--border)] shadow-2xl space-y-6 transition-colors text-center max-h-[85vh] overflow-y-auto">
+    <div id="welcome-modal" class="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-[var(--bg)] rounded-3xl max-w-md w-full p-8 border border-[var(--border)] shadow-2xl space-y-6 transition-colors text-center">
             <div class="w-14 h-14 rounded-full bg-[var(--card)] border border-[var(--border)] flex items-center justify-center text-2xl mx-auto shadow-inner">
                 ✨
             </div>
@@ -213,8 +213,8 @@
     </main>
 
     <!-- Profile & Sanctuary Name Edit Modal -->
-    <div id="sanctuary-modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 sm:p-4">
-        <div class="bg-[var(--bg)] rounded-3xl max-w-sm w-full p-6 border border-[var(--border)] shadow-xl space-y-4 transition-colors max-h-[85vh] overflow-y-auto">
+    <div id="sanctuary-modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-[var(--bg)] rounded-3xl max-w-sm w-full p-6 border border-[var(--border)] shadow-xl space-y-4 transition-colors">
             <h3 class="text-lg font-semibold" style="color: var(--text-main)">Edit Profile & Sanctuary</h3>
             <p class="text-xs" style="color: var(--text-muted)">Customize your name, sanctuary title, and mood theme.</p>
             <div class="space-y-3">
@@ -244,8 +244,8 @@
     </div>
 
     <!-- Modal Form (Create / Edit) -->
-    <div id="app-modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 sm:p-4">
-        <div class="bg-[var(--bg)] rounded-3xl max-w-md w-full p-6 border border-[var(--border)] shadow-xl relative max-h-[85vh] overflow-y-auto transition-colors">
+    <div id="app-modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-[var(--bg)] rounded-3xl max-w-md w-full p-6 border border-[var(--border)] shadow-xl relative max-h-[90vh] overflow-y-auto transition-colors">
             <h3 id="modal-title" class="text-lg font-semibold mb-4" style="color: var(--text-main)">Create New Goal List</h3>
             <form onsubmit="handleFormSubmit(event)" class="space-y-4">
                 <input type="hidden" id="input-edit-id">
@@ -316,8 +316,8 @@
     </div>
 
     <!-- Completion Modal (Archive/Delete Prompt) -->
-    <div id="completion-modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 sm:p-4">
-        <div class="bg-[var(--bg)] rounded-3xl max-w-sm w-full p-6 border border-[var(--border)] text-center shadow-xl space-y-4 transition-colors max-h-[85vh] overflow-y-auto">
+    <div id="completion-modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-[var(--bg)] rounded-3xl max-w-sm w-full p-6 border border-[var(--border)] text-center shadow-xl space-y-4 transition-colors">
             <div class="text-4xl">🎉</div>
             <h3 class="text-lg font-semibold" style="color: var(--text-main)">List Completed!</h3>
             <p class="text-xs" style="color: var(--text-muted)">You have completed all active tasks in this list. Would you like to archive/delete it or keep it?</p>
@@ -330,8 +330,8 @@
     </div>
 
     <!-- Freeze Setup Modal -->
-    <div id="freeze-modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-3 sm:p-4">
-        <div class="bg-[var(--bg)] rounded-3xl max-w-sm w-full p-6 border border-[var(--border)] text-center shadow-xl space-y-4 transition-colors max-h-[85vh] overflow-y-auto">
+    <div id="freeze-modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-[var(--bg)] rounded-3xl max-w-sm w-full p-6 border border-[var(--border)] text-center shadow-xl space-y-4 transition-colors">
             <div class="text-3xl">🛡️</div>
             <h3 class="text-lg font-semibold" style="color: var(--text-main)">Activate Streak Freeze</h3>
             <p class="text-xs" style="color: var(--text-muted)">How many consecutive days would you like to freeze starting today? (You have <span id="freeze-count-left">0</span> freezes remaining)</p>
@@ -796,17 +796,11 @@
                 dashContainer.innerHTML = `<div class="text-center py-12 bg-[var(--card)] rounded-2xl border border-[var(--border)]" style="color: var(--text-muted)">No lists match the selected filter.</div>`;
             } else {
                 let html = '';
-                
-                // Show banner only when viewing a different date than today
                 if (activeViewDate !== todayStr) {
                     html += `
-                        <div class="bg-[var(--card)] rounded-2xl p-4 border border-[var(--border)] flex items-center justify-between transition-colors mb-4">
-                            <div class="text-xs" style="color: var(--text-main)">
-                                📅 Viewing past date: <strong>${activeViewDate}</strong>. You can check off missed tasks for this date!
-                            </div>
-                            <button onclick="jumpToDate('${todayStr}')" class="text-xs font-semibold px-3 py-1.5 rounded-xl border border-[var(--border)] bg-[var(--bg)] hover:opacity-80 transition-all" style="color: var(--text-main)">
-                                Back to Today
-                            </button>
+                        <div class="p-3 rounded-2xl text-xs flex items-center justify-between border bg-[var(--card)] border-[var(--border)]">
+                            <span style="color: var(--text-main)">🗓️ Viewing past date: <strong>${activeViewDate}</strong>. You can check off missed tasks for this date!</span>
+                            <button onclick="jumpToDate('${todayStr}')" class="font-semibold underline" style="color: var(--accent)">Back to Today</button>
                         </div>
                     `;
                 }
@@ -875,28 +869,15 @@
                                 <div class="text-xs font-semibold uppercase tracking-wider" style="color: var(--text-muted)">${isTodo ? 'Tasks & Intervals' : `Habits for ${activeViewDate}`}</div>
                     `;
 
-                    // For To-Do lists, sort future tasks to the bottom
-                    let renderHabits = l.habits;
-                    if (isTodo) {
-                        renderHabits = [...l.habits].sort((a, b) => {
-                            let aFuture = a.dueDate && a.dueDate > activeViewDate ? 1 : 0;
-                            let bFuture = b.dueDate && b.dueDate > activeViewDate ? 1 : 0;
-                            return aFuture - bFuture;
-                        });
-                    }
-
-                    renderHabits.forEach(h => {
+                    l.habits.forEach(h => {
                         let checked = isTodo ? (l.checks && l.checks['todo'] && !!l.checks['todo'][h.id]) : !!(l.checks[activeViewDate] && l.checks[activeViewDate][h.id]);
                         let isLocked = isTodo && h.dueDate && h.dueDate > todayStr;
-                        let isOverdue = isTodo && !checked && h.dueDate && h.dueDate < activeViewDate;
                         let clickAction = isLocked || viewIsFrozen ? '' : (isTodo ? `toggleTodo('${l.id}', '${h.id}')` : `toggleCheck('${l.id}', '${h.id}', '${activeViewDate}')`);
-                        
-                        let dateBadge = h.dueDate ? `<span class="text-[10px] px-2 py-0.5 rounded-md bg-[var(--bg)] border border-[var(--border)] ml-2" style="color: var(--text-muted)">📅 ${h.dueDate}</span>` : '';
-                        let overdueLabel = isOverdue ? `<span class="text-[10px] font-bold px-2 py-0.5 rounded bg-[var(--accent)] text-[var(--accent-text)] ml-2">Overdue</span>` : '';
                         
                         let metaInfo = '';
                         if (isTodo) {
                             let tags = [];
+                            if (h.dueDate) tags.push(`Due: ${h.dueDate}`);
                             if (h.intervalValue && h.intervalUnit) tags.push(`Repeat: every ${h.intervalValue} ${h.intervalUnit}`);
                             if (tags.length > 0) {
                                 metaInfo = `<span class="text-[10px] bg-[var(--card)] px-2 py-0.5 rounded-md border border-[var(--border)] ml-2" style="color: var(--text-muted)">${tags.join(' • ')}</span>`;
@@ -907,11 +888,7 @@
                         let textStyle = '';
                         let subText = '';
 
-                        if (isOverdue) {
-                            cardStyle = `background-color: var(--badge-bg); border-color: var(--accent);`;
-                            textStyle = 'text-[var(--text-main)] font-semibold';
-                            subText = 'Overdue';
-                        } else if (isLocked) {
+                        if (isLocked) {
                             cardStyle = 'bg-[var(--bg)]/30 border-[var(--border)] opacity-60 cursor-not-allowed';
                             textStyle = 'text-[var(--text-muted)]';
                             subText = `Available on ${h.dueDate}`;
@@ -930,15 +907,13 @@
                         }
 
                         html += `
-                            <div onclick="${clickAction}" class="flex items-center justify-between p-3.5 rounded-2xl border transition-all" style="${isOverdue ? cardStyle : ''}" ${!isOverdue ? `class="flex items-center justify-between p-3.5 rounded-2xl border transition-all ${cardStyle}"` : ''}>
+                            <div onclick="${clickAction}" class="flex items-center justify-between p-3.5 rounded-2xl border transition-all ${cardStyle}">
                                 <div class="flex items-center space-x-3 flex-1 overflow-hidden">
                                     <div class="w-5 h-5 rounded-md border flex items-center justify-center text-xs shrink-0 ${isLocked || viewIsFrozen ? 'border-[var(--border)] bg-[var(--border)]/40 text-transparent' : (checked ? 'border-[var(--accent)] text-white' : 'border-[var(--border-hover)] bg-[var(--card)]')}" ${checked && !isLocked && !viewIsFrozen ? 'style="background-color: var(--accent)"' : ''}>
                                         ${checked ? '✓' : ''}
                                     </div>
-                                    <div class="truncate flex items-center">
+                                    <div class="truncate">
                                         <span class="text-sm font-medium ${textStyle}">${h.text}</span>
-                                        ${dateBadge}
-                                        ${overdueLabel}
                                         ${metaInfo}
                                     </div>
                                 </div>
@@ -1349,4 +1324,3 @@
         window.onload = loadData;
     </script>
 </body>
-</html>
