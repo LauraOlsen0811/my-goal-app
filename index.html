@@ -74,9 +74,7 @@
             root.style.setProperty('--accent-text', t.accentText);
             root.style.setProperty('--badge-bg', t.badgeBg);
             
-            if (typeof renderApp === 'function') {
-                renderApp();
-            }
+            renderApp();
         }
 
         tailwind.config = {
@@ -454,6 +452,7 @@
 
             setTheme(appData.theme);
 
+            // Check if profile/sanctuary is configured yet
             if (!appData.userName || !appData.sanctuaryName) {
                 openWelcomeModal();
             } else {
@@ -500,6 +499,7 @@
             document.getElementById('edit-username-input').value = appData.userName || '';
             document.getElementById('sanctuary-name-input').value = appData.sanctuaryName || "Today's Sanctuary";
             selectedEditThemeName = appData.theme || localStorage.getItem('aura_theme') || 'cozy';
+            
             document.querySelectorAll('.edit-theme-btn').forEach(b => {
                 if (b.dataset.etheme === selectedEditThemeName) {
                     b.classList.add('ring-2', 'ring-[var(--accent)]');
@@ -515,297 +515,541 @@
         }
 
         function saveSanctuaryName() {
-            let uInput = document.getElementById('edit-username-input').value.trim();
-            let sInput = document.getElementById('sanctuary-name-input').value.trim();
-            if (uInput && sInput) {
-                appData.userName = uInput;
-                appData.sanctuaryName = sInput;
+            let userName = document.getElementById('edit-username-input').value.trim();
+            let sanctuaryName = document.getElementById('sanctuary-name-input').value.trim();
+            if (userName && sanctuaryName) {
+                appData.userName = userName;
+                appData.sanctuaryName = sanctuaryName;
                 appData.theme = selectedEditThemeName;
                 setTheme(appData.theme);
                 saveData();
-                closeSanctuaryModal();
                 renderApp();
             }
+            closeSanctuaryModal();
         }
 
-        function switchTab(tab) {
-            currentTab = tab;
-            let dashBtn = document.getElementById('tab-dash');
-            let listsBtn = document.getElementById('tab-lists');
-            let dashView = document.getElementById('view-dashboard');
-            let listsView = document.getElementById('view-lists');
-
-            if (tab === 'dashboard') {
-                dashBtn.style.backgroundColor = 'var(--bg)';
-                dashBtn.style.color = 'var(--text-main)';
-                dashBtn.className = "px-5 py-2 rounded-full text-sm font-medium shadow-sm transition-all";
-                listsBtn.style.backgroundColor = 'transparent';
-                listsBtn.style.color = 'var(--text-muted)';
-                dashView.classList.remove('hidden');
-                listsView.classList.add('hidden');
-            } else {
-                listsBtn.style.backgroundColor = 'var(--bg)';
-                listsBtn.style.color = 'var(--text-main)';
-                listsBtn.className = "px-5 py-2 rounded-full text-sm font-medium shadow-sm transition-all";
-                dashBtn.style.backgroundColor = 'transparent';
-                dashBtn.style.color = 'var(--text-muted)';
-                dashView.classList.add('hidden');
-                listsView.classList.remove('hidden');
-            }
-            renderApp();
-        }
-
-        function openModal(editId = null) {
-            document.getElementById('input-edit-id').value = '';
-            document.getElementById('input-title').value = '';
-            document.getElementById('input-category').value = '🌿';
-            document.getElementById('input-duration').value = '30';
-            document.getElementById('input-freeze-count').value = '2';
-            document.getElementById('input-freeze-duration').value = '7';
-            document.getElementById('input-startdate').value = getLocalDateStr();
-            document.getElementById('modal-title').innerText = "Create New Goal List";
-            setListType('habit');
-
-            if (editId) {
-                let list = appData.lists.find(l => l.id === editId);
-                if (list) {
-                    document.getElementById('input-edit-id').value = list.id;
-                    document.getElementById('input-title').value = list.title;
-                    document.getElementById('input-category').value = list.category || '🌿';
-                    setListType(list.type || 'habit');
-                    if (list.type === 'habit') {
-                        document.getElementById('input-duration').value = list.duration || 30;
-                        document.getElementById('input-freeze-count').value = list.freezeCount !== undefined ? list.freezeCount : 2;
-                        document.getElementById('input-freeze-duration').value = list.freezeDuration !== undefined ? list.freezeDuration : 7;
-                        document.getElementById('input-startdate').value = list.startDate || getLocalDateStr();
-                    }
-                    document.getElementById('modal-title').innerText = "Edit Goal List";
-                    renderTaskInputRows(list.tasks || []);
-                }
-            } else {
-                renderTaskInputRows([]);
-            }
-            document.getElementById('app-modal').classList.remove('hidden');
-        }
-
-        function closeModal() {
-            document.getElementById('app-modal').classList.add('hidden');
-        }
-
-        function renderTaskInputRows(existingTasks) {
-            let container = document.getElementById('tasks-input-container');
-            container.innerHTML = '';
-            if (!existingTasks || existingTasks.length === 0) {
-                existingTasks = [{ name: '', date: '', interval: '' }];
-            }
-
-            existingTasks.forEach((t, idx) => {
-                let row = document.createElement('div');
-                row.className = "flex items-center gap-2 task-input-row";
-                let valName = typeof t === 'string' ? t : (t.name || '');
-                let valDate = typeof t === 'object' && t.date ? t.date : '';
-                let valInterval = typeof t === 'object' && t.interval ? t.interval : '';
-
-                if (selectedListType === 'habit') {
-                    row.innerHTML = `
-                        <input type="text" placeholder="Habit name (e.g., Drink water)" value="${valName}" class="task-name-input flex-1 bg-[var(--card)] border border-[var(--border)] rounded-xl px-3 py-2 text-sm outline-none" style="color: var(--text-main)">
-                        <button type="button" onclick="this.parentElement.remove()" class="text-xs text-red-500 hover:text-red-700 px-2">✕</button>
-                    `;
-                } else {
-                    row.innerHTML = `
-                        <input type="text" placeholder="Task description" value="${valName}" class="task-name-input flex-1 bg-[var(--card)] border border-[var(--border)] rounded-xl px-3 py-2 text-sm outline-none" style="color: var(--text-main)">
-                        <input type="date" value="${valDate}" title="Specific Target Date" class="task-date-input bg-[var(--card)] border border-[var(--border)] rounded-xl px-2 py-2 text-xs outline-none" style="color: var(--text-main)">
-                        <input type="number" placeholder="Days Interval" min="1" max="365" value="${valInterval}" title="Repeat Interval (Days)" class="task-interval-input w-24 bg-[var(--card)] border border-[var(--border)] rounded-xl px-2 py-2 text-xs outline-none" style="color: var(--text-main)">
-                        <button type="button" onclick="this.parentElement.remove()" class="text-xs text-red-500 hover:text-red-700 px-2">✕</button>
-                    `;
-                }
-                container.appendChild(row);
-            });
-        }
-
-        function addTaskInputRow() {
-            let container = document.getElementById('tasks-input-container');
-            let row = document.createElement('div');
-            row.className = "flex items-center gap-2 task-input-row";
-            if (selectedListType === 'habit') {
-                row.innerHTML = `
-                    <input type="text" placeholder="Habit name" class="task-name-input flex-1 bg-[var(--card)] border border-[var(--border)] rounded-xl px-3 py-2 text-sm outline-none" style="color: var(--text-main)">
-                    <button type="button" onclick="this.parentElement.remove()" class="text-xs text-red-500 hover:text-red-700 px-2">✕</button>
-                `;
-            } else {
-                row.innerHTML = `
-                    <input type="text" placeholder="Task description" class="task-name-input flex-1 bg-[var(--card)] border border-[var(--border)] rounded-xl px-3 py-2 text-sm outline-none" style="color: var(--text-main)">
-                    <input type="date" title="Specific Target Date" class="task-date-input bg-[var(--card)] border border-[var(--border)] rounded-xl px-2 py-2 text-xs outline-none" style="color: var(--text-main)">
-                    <input type="number" placeholder="Days Interval" min="1" max="365" title="Repeat Interval (Days)" class="task-interval-input w-24 bg-[var(--card)] border border-[var(--border)] rounded-xl px-2 py-2 text-xs outline-none" style="color: var(--text-main)">
-                    <button type="button" onclick="this.parentElement.remove()" class="text-xs text-red-500 hover:text-red-700 px-2">✕</button>
-                `;
-            }
-            container.appendChild(row);
-        }
-
-        function handleFormSubmit(e) {
-            e.preventDefault();
-            let editId = document.getElementById('input-edit-id').value;
-            let title = document.getElementById('input-title').value.trim();
-            let category = document.getElementById('input-category').value;
-            let type = selectedListType;
-            let duration = parseInt(document.getElementById('input-duration').value) || 30;
-            let startDate = document.getElementById('input-startdate').value || getLocalDateStr();
-            let freezeCount = parseInt(document.getElementById('input-freeze-count').value) || 0;
-            let freezeDuration = parseInt(document.getElementById('input-freeze-duration').value) || 7;
-
-            let taskRows = document.querySelectorAll('.task-input-row');
-            let tasks = [];
-
-            if (type === 'habit') {
-                let rawNames = [];
-                taskRows.forEach(row => {
-                    let nameInput = row.querySelector('.task-name-input').value.trim();
-                    if (nameInput) {
-                        if (nameInput.includes(',')) {
-                            nameInput.split(',').forEach(n => {
-                                if(n.trim()) rawNames.push(n.trim());
-                            });
-                        } else {
-                            rawNames.push(nameInput);
-                        }
-                    }
-                });
-                tasks = rawNames.map((name, idx) => ({
-                    id: 't_' + Date.now() + '_' + idx,
-                    name: name,
-                    completedDays: {}
-                }));
-            } else {
-                taskRows.forEach((row, idx) => {
-                    let nameInput = row.querySelector('.task-name-input').value.trim();
-                    let dateInput = row.querySelector('.task-date-input').value;
-                    let intervalInput = row.querySelector('.task-interval-input').value;
-                    if (nameInput) {
-                        tasks.push({
-                            id: 't_' + Date.now() + '_' + idx,
-                            name: nameInput,
-                            date: dateInput || '',
-                            interval: intervalInput ? parseInt(intervalInput) : '',
-                            completedDays: {}
-                        });
-                    }
-                });
-            }
-
-            if (tasks.length === 0) {
-                alert("Please add at least one item.");
-                return;
-            }
-
-            if (editId) {
-                let list = appData.lists.find(l => l.id === editId);
-                if (list) {
-                    list.title = title;
-                    list.category = category;
-                    list.type = type;
-                    list.categorySymbol = category;
-                    if (type === 'habit') {
-                        list.duration = duration;
-                        list.startDate = startDate;
-                        list.freezeCount = freezeCount;
-                        list.freezeDuration = freezeDuration;
-                        if (list.freezesLeft === undefined) list.freezesLeft = freezeCount;
-                        if (!list.freezesUsed) list.freezesUsed = [];
-                    }
-                    
-                    let oldTasksMap = {};
-                    (list.tasks || []).forEach(ot => { oldTasksMap[ot.name] = ot.completedDays; });
-                    tasks.forEach(nt => {
-                        if (oldTasksMap[nt.name]) {
-                            nt.completedDays = oldTasksMap[nt.name];
-                        }
-                    });
-                    list.tasks = tasks;
-                }
-            } else {
-                let newList = {
-                    id: 'list_' + Date.now(),
-                    title: title,
-                    category: category,
-                    categorySymbol: category,
-                    type: type,
-                    duration: type === 'habit' ? duration : 0,
-                    startDate: type === 'habit' ? startDate : getLocalDateStr(),
-                    freezeCount: freezeCount,
-                    freezeDuration: freezeDuration,
-                    freezesLeft: freezeCount,
-                    freezesUsed: [],
-                    tasks: tasks
-                };
-                appData.lists.push(newList);
-            }
-
-            saveData();
-            closeModal();
-            renderApp();
-        }
-
-        function deleteList(listId) {
-            if (confirm("Are you sure you want to delete this goal list?")) {
-                appData.lists = appData.lists.filter(l => l.id !== listId);
-                saveData();
-                renderApp();
-            }
-        }
-
-        function toggleTaskCompletion(listId, taskId, dateStr) {
-            let list = appData.lists.find(l => l.id === listId);
-            if (!list) return;
-            let task = list.tasks.find(t => t.id === taskId);
-            if (!task) return;
-
-            if (!task.completedDays) task.completedDays = {};
-            task.completedDays[dateStr] = !task.completedDays[dateStr];
-
-            saveData();
-            renderApp();
+        function isDateFrozen(list, dStr) {
+            if (!list.freezes || !Array.isArray(list.freezes)) return false;
+            return list.freezes.includes(dStr);
         }
 
         function processMissedDays() {
-            let today = getLocalDateStr();
+            const todayStr = getLocalDateStr();
+            let updated = false;
             appData.lists.forEach(list => {
-                if (list.type !== 'habit') return;
-                if (!list.freezesUsed) list.freezesUsed = [];
-                if (list.freezesLeft === undefined) list.freezesLeft = list.freezeCount !== undefined ? list.freezeCount : 2;
+                if (list.type === 'todo') return;
+                if (!list.checks) list.checks = {};
+                if (!list.missedDays) list.missedDays = [];
+                
+                let curr = new Date(list.startDate + 'T00:00:00');
+                let today = new Date(todayStr + 'T00:00:00');
+                while (curr < today) {
+                    let dStr = getLocalDateStr(curr);
+                    if (isDateFrozen(list, dStr)) {
+                        curr.setDate(curr.getDate() + 1);
+                        continue;
+                    }
+                    let dayChecks = list.checks[dStr] || {};
+                    let allDone = list.habits.length > 0 && list.habits.every(h => dayChecks[h.id]);
+                    if (!allDone && !list.missedDays.includes(dStr)) {
+                        list.missedDays.push(dStr);
+                        updated = true;
+                    }
+                    curr.setDate(curr.getDate() + 1);
+                }
             });
+            if (updated) saveData();
         }
 
-        function calculateListStreak(list) {
-            if (list.type !== 'habit') return 0;
-            let todayStr = getLocalDateStr();
-            let streak = 0;
-            let d = new Date();
-
-            for (let i = 0; i < 365; i++) {
-                let dStr = getLocalDateStr(d);
-                if (dStr > todayStr) {
-                    d.setDate(d.getDate() - 1);
-                    continue;
-                }
-                let allCompleted = list.tasks.every(t => t.completedDays && t.completedDays[dStr]);
-                let isFrozen = (list.freezesUsed || []).includes(dStr);
-
-                if (allCompleted || isFrozen) {
-                    streak++;
-                } else {
-                    if (dStr !== todayStr) break;
-                }
-                d.setDate(d.getDate() - 1);
+        function getStats(list) {
+            if (list.type === 'todo') {
+                let total = list.habits.length;
+                let todayStr = getLocalDateStr();
+                let availableCount = list.habits.filter(h => !h.dueDate || h.dueDate <= todayStr).length;
+                let doneCount = list.habits.filter(h => list.checks && list.checks['todo'] && list.checks['todo'][h.id]).length;
+                let percent = availableCount > 0 ? Math.min(100, Math.round((doneCount / availableCount) * 100)) : (total > 0 ? 100 : 0);
+                return { streak: 0, completedDays: doneCount, missedCount: 0, percent };
             }
-            return streak;
+
+            let todayStr = getLocalDateStr();
+            let start = new Date(list.startDate + 'T00:00:00');
+            let today = new Date(todayStr + 'T00:00:00');
+            
+            let completedDays = 0;
+            let streak = 0;
+            let countingStreak = true;
+
+            let curr = new Date(today);
+            while (curr >= start) {
+                let dStr = getLocalDateStr(curr);
+                let frozen = isDateFrozen(list, dStr);
+                let dayChecks = list.checks[dStr] || {};
+                let isComplete = (list.habits.length > 0 && list.habits.every(h => dayChecks[h.id])) || frozen;
+
+                if (dStr === todayStr) {
+                    if (isComplete) { if(!frozen) completedDays++; if (countingStreak && !frozen) streak++; }
+                } else {
+                    if (isComplete) { if(!frozen) completedDays++; if (countingStreak) { if(!frozen) streak++; } }
+                    else { if(!frozen) countingStreak = false; }
+                }
+                curr.setDate(curr.getDate() - 1);
+            }
+
+            let percent = Math.min(100, Math.round((completedDays / list.durationDays) * 100));
+            return { streak, completedDays, missedCount: (list.missedDays || []).length, percent };
         }
 
-        function openFreezeModal(listId) {
+        function getDayColorStyle(ratio, isFuture, isFrozen) {
+            const currentThemeName = localStorage.getItem('aura_theme') || 'cozy';
+            const t = themes[currentThemeName] || themes.cozy;
+            const colors = t.dayColors;
+
+            if (isFuture) return 'background-color: var(--bg); color: var(--text-muted); opacity: 0.3; border: 1px dashed var(--border);';
+            if (isFrozen) return 'background-color: var(--card); color: var(--text-main); font-weight: 600; border: 1px solid var(--border);';
+            if (ratio === 0) return `background-color: ${colors[0]}; color: var(--text-muted);`; 
+            if (ratio === 1) return `background-color: ${colors[1]}; color: var(--text-main); font-weight: 600;`; 
+            if (ratio >= 0.75) return `background-color: ${colors[2]}; color: var(--text-main);`; 
+            if (ratio >= 0.50) return `background-color: ${colors[3]}; color: var(--text-main);`; 
+            return `background-color: var(--card); color: var(--text-muted);`; 
+        }
+
+        function renderCalendarView(list) {
+            if (list.type === 'todo') return '';
+
+            let startDate = new Date(list.startDate + 'T00:00:00');
+            let endDate = new Date(startDate);
+            endDate.setDate(startDate.getDate() + list.durationDays - 1);
+
+            let today = new Date();
+
+            let html = '';
+            let iterDate = new Date(startDate.getFullYear(), startDate.getMonth(), 1);
+            let finalMonth = new Date(endDate.getFullYear(), endDate.getMonth(), 1);
+
+            while (iterDate <= finalMonth) {
+                let year = iterDate.getFullYear();
+                let month = iterDate.getMonth();
+                let monthName = iterDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+
+                let firstDayIndex = new Date(year, month, 1).getDay();
+                let daysInMonth = new Date(year, month + 1, 0).getDate();
+
+                html += `
+                    <div class="bg-[var(--bg)] p-3 rounded-2xl border border-[var(--border)] transition-colors">
+                        <div class="text-[11px] font-semibold mb-2 text-center uppercase tracking-wider" style="color: var(--text-main)">${monthName}</div>
+                        <div class="grid grid-cols-7 gap-1 text-center text-[10px] font-bold mb-1" style="color: var(--text-muted)">
+                            <div>Su</div><div>Mo</div><div>Tu</div><div>We</div><div>Th</div><div>Fr</div><div>Sa</div>
+                        </div>
+                        <div class="grid grid-cols-7 gap-1 text-center">
+                `;
+
+                for (let i = 0; i < firstDayIndex; i++) {
+                    html += `<div></div>`;
+                }
+
+                for (let d = 1; d <= daysInMonth; d++) {
+                    let currD = new Date(year, month, d);
+                    let dStr = getLocalDateStr(currD);
+                    let isWithinChallenge = currD >= startDate && currD <= endDate;
+                    let isFuture = currD > today;
+                    let isFrozen = isDateFrozen(list, dStr);
+
+                    if (isWithinChallenge) {
+                        let dayChecks = list.checks[dStr] || {};
+                        let totalHabits = list.habits.length;
+                        let doneCount = list.habits.filter(h => dayChecks[h.id]).length;
+                        let ratio = totalHabits > 0 ? (doneCount / totalHabits) : 0;
+                        let styleStr = getDayColorStyle(ratio, isFuture, isFrozen);
+                        let tooltip = isFrozen ? `Day ${dStr}: Streak Frozen 🛡️` : `Day ${dStr}: ${doneCount}/${totalHabits} completed`;
+
+                        html += `<div onclick="jumpToDate('${dStr}')" class="w-7 h-7 mx-auto rounded-lg flex items-center justify-center text-xs transition-all cursor-pointer hover:scale-110" style="${styleStr}" title="${tooltip} (Click to view/check this day)">${d}</div>`;
+                    } else {
+                        html += `<div class="w-7 h-7 mx-auto rounded-lg text-[var(--text-muted)]/25 flex items-center justify-center text-xs">${d}</div>`;
+                    }
+                }
+
+                html += `</div></div>`;
+                iterDate.setMonth(iterDate.getMonth() + 1);
+            }
+
+            return `
+                <div class="mt-4 pt-4 border-t border-[var(--border)]">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="text-xs font-semibold uppercase tracking-wider" style="color: var(--text-muted)">Challenge Calendar Grid (Click day to check/edit)</span>
+                        <div class="flex items-center space-x-3 text-[10px]" style="color: var(--text-muted)">
+                            <span class="flex items-center space-x-1"><span class="w-2.5 h-2.5 rounded-xs bg-[var(--card)] border border-[var(--border)] inline-block"></span><span>Frozen 🛡️</span></span>
+                            <span class="flex items-center space-x-1"><span class="w-2.5 h-2.5 rounded-xs inline-block" style="background-color: var(--border);"></span><span>Missed</span></span>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-72 overflow-y-auto pr-1">
+                        ${html}
+                    </div>
+                </div>
+            `;
+        }
+
+        function jumpToDate(dStr) {
+            activeViewDate = dStr;
+            let datePicker = document.getElementById('dash-date-picker');
+            if (datePicker) datePicker.value = dStr;
+            switchTab('dashboard');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function renderCircularProgress(percent) {
+            let radius = 28;
+            let circumference = 2 * Math.PI * radius;
+            let strokeDashoffset = circumference - (percent / 100) * circumference;
+
+            return `
+                <div class="relative w-20 h-20 flex items-center justify-center">
+                    <svg class="w-full h-full transform -rotate-90" viewBox="0 0 70 70">
+                        <circle cx="35" cy="35" r="${radius}" stroke="var(--border)" stroke-width="6" fill="transparent" />
+                        <circle cx="35" cy="35" r="${radius}" stroke="var(--accent)" stroke-width="6" fill="transparent"
+                            stroke-dasharray="${circumference}" stroke-dashoffset="${strokeDashoffset}" stroke-linecap="round" class="transition-all duration-500" />
+                    </svg>
+                    <div class="absolute inset-0 flex items-center justify-center text-xs font-bold" style="color: var(--text-main)">
+                        ${percent}%
+                    </div>
+                </div>
+            `;
+        }
+
+        function renderApp() {
+            let todayStr = getLocalDateStr();
+            if (!activeViewDate) activeViewDate = todayStr;
+
+            let datePicker = document.getElementById('dash-date-picker');
+            if (datePicker && datePicker.value !== activeViewDate) {
+                datePicker.value = activeViewDate;
+            }
+
+            document.getElementById('date-text').innerText = new Date().toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+            
+            let userBadge = document.getElementById('user-greeting-badge');
+            if (userBadge) {
+                userBadge.innerText = appData.userName ? `${appData.userName}'s Haven` : '';
+            }
+
+            let sanctuaryDisplay = document.getElementById('sanctuary-title-display');
+            if (sanctuaryDisplay) {
+                sanctuaryDisplay.innerText = appData.sanctuaryName || "Today's Sanctuary";
+            }
+            
+            let totalStreaks = 0;
+            let totHabits = 0, totDone = 0;
+
+            appData.lists.forEach(l => {
+                let st = getStats(l);
+                totalStreaks += st.streak;
+                if (l.type === 'todo') {
+                    if (!l.checks) l.checks = {};
+                    if (!l.checks['todo']) l.checks['todo'] = {};
+                    l.habits.forEach(h => {
+                        let isLocked = h.dueDate && h.dueDate > todayStr;
+                        if (!isLocked) {
+                            totHabits++;
+                            if (l.checks['todo'][h.id]) totDone++;
+                        }
+                    });
+                } else {
+                    if (!l.checks[todayStr]) l.checks[todayStr] = {};
+                    l.habits.forEach(h => {
+                        totHabits++;
+                        if (l.checks[todayStr][h.id]) totDone++;
+                    });
+                }
+            });
+
+            document.getElementById('stat-streaks').innerText = totalStreaks;
+            document.getElementById('stat-completed').innerText = `${totDone}/${totHabits}`;
+
+            let filterSelect = document.getElementById('filter-select');
+            let filterVal = filterSelect ? filterSelect.value : 'all';
+            let selectHtml = '<option value="all">All Active Lists</option>';
+            appData.lists.forEach(l => {
+                let catSymbol = l.category || '✨';
+                selectHtml += `<option value="${l.id}" ${filterVal === l.id ? 'selected' : ''}>${catSymbol} ${l.title}</option>`;
+            });
+            if (filterSelect) {
+                filterSelect.innerHTML = selectHtml;
+                filterVal = filterSelect.value;
+            }
+
+            let filtered = filterVal === 'all' ? appData.lists : appData.lists.filter(l => l.id === filterVal);
+            let dashContainer = document.getElementById('dashboard-container');
+            
+            if (appData.lists.length === 0) {
+                dashContainer.innerHTML = `
+                    <div class="text-center py-16 bg-[var(--card)] rounded-3xl border border-[var(--border)] space-y-3 transition-colors" style="color: var(--text-muted)">
+                        <div class="text-3xl">✨</div>
+                        <h3 class="text-lg font-medium" style="color: var(--text-main)">Your sanctuary is empty</h3>
+                        <p class="text-xs max-w-sm mx-auto">Get started by creating your very first goal list or habit tracking routine.</p>
+                        <div>
+                            <button onclick="openModal()" class="mt-2 px-5 py-2.5 rounded-full text-xs font-medium transition-all shadow-sm" style="background-color: var(--accent); color: var(--accent-text)">
+                                + Create New Goal List
+                            </button>
+                        </div>
+                    </div>
+                `;
+            } else if (filtered.length === 0) {
+                dashContainer.innerHTML = `<div class="text-center py-12 bg-[var(--card)] rounded-2xl border border-[var(--border)]" style="color: var(--text-muted)">No lists match the selected filter.</div>`;
+            } else {
+                let html = '';
+                if (activeViewDate !== todayStr) {
+                    html += `
+                        <div class="p-3 rounded-2xl text-xs flex items-center justify-between border bg-[var(--card)] border-[var(--border)]">
+                            <span style="color: var(--text-main)">🗓️ Viewing past date: <strong>${activeViewDate}</strong>. You can check off missed tasks for this date!</span>
+                            <button onclick="jumpToDate('${todayStr}')" class="font-semibold underline" style="color: var(--accent)">Back to Today</button>
+                        </div>
+                    `;
+                }
+
+                filtered.forEach(l => {
+                    let st = getStats(l);
+                    let catSymbol = l.category || '✨';
+                    let isTodo = l.type === 'todo';
+                    let viewIsFrozen = !isTodo && isDateFrozen(l, activeViewDate);
+                    let freezesUsed = l.freezes ? l.freezes.length : 0;
+                    let maxFreezes = l.freezeCount !== undefined ? l.freezeCount : 2;
+                    let freezeDaysAllowed = l.freezeDuration !== undefined ? l.freezeDuration : 7;
+                    let freezesLeft = Math.max(0, maxFreezes - Math.floor(freezesUsed / freezeDaysAllowed));
+
+                    html += `
+                        <div class="bg-[var(--card)] rounded-3xl p-6 border border-[var(--border)] shadow-sm space-y-4 transition-colors">
+                            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                                <div>
+                                    <div class="flex items-center space-x-2">
+                                        <span class="text-base px-2.5 py-1 rounded-full bg-[var(--bg)] border border-[var(--border)] inline-block">${catSymbol}</span>
+                                        <span class="text-[10px] font-semibold uppercase px-2 py-1 bg-[var(--bg)] border border-[var(--border)] rounded-lg" style="color: var(--text-muted)">${isTodo ? 'To-Do / Interval List' : 'Habit Tracker'}</span>
+                                        ${!isTodo && maxFreezes > 0 ? `<span class="text-[10px] font-semibold uppercase px-2 py-1 bg-[var(--bg)] border border-[var(--border)] rounded-lg" style="color: var(--text-main)">🛡️ Freezes Left: ${freezesLeft}/${maxFreezes}</span>` : ''}
+                                    </div>
+                                    <h3 class="text-xl font-medium mt-2" style="color: var(--text-main)">${l.title}</h3>
+                                    <p class="text-xs mt-0.5" style="color: var(--text-muted)">${isTodo ? 'Task List with Dates & Intervals' : `Duration: ${l.durationDays} Days • Start: ${l.startDate}`}</p>
+                                </div>
+                                <div class="flex items-center space-x-3">
+                                    ${!isTodo ? `
+                                    <div class="flex flex-col gap-1 items-end">
+                                        <div class="flex space-x-2">
+                                            <div class="bg-[var(--bg)] px-3 py-1.5 rounded-xl border border-[var(--border)] text-center">
+                                                <div class="text-xs font-bold" style="color: var(--text-main)">🔥 ${st.streak}</div>
+                                                <div class="text-[9px] uppercase" style="color: var(--text-muted)">Streak</div>
+                                            </div>
+                                            <div class="bg-[var(--bg)] px-3 py-1.5 rounded-xl border border-[var(--border)] text-center">
+                                                <div class="text-xs font-bold" style="color: var(--text-main)">⚠️ ${st.missedCount}</div>
+                                                <div class="text-[9px] uppercase" style="color: var(--text-muted)">Missed</div>
+                                            </div>
+                                        </div>
+                                        ${maxFreezes > 0 ? `
+                                            <div class="flex items-center gap-1">
+                                                <button onclick="openFreezeModal('${l.id}', ${freezesLeft})" class="text-[10px] px-2 py-1 bg-[var(--bg)] border border-[var(--border)] rounded-lg font-medium hover:opacity-80 transition-all ${viewIsFrozen ? 'font-bold' : ''}" style="color: var(--text-main)">
+                                                    ${viewIsFrozen ? '🛡️ Streak Frozen Today' : '🛡️ Freeze Streak'}
+                                                </button>
+                                                ${viewIsFrozen ? `
+                                                    <button onclick="unfreezeToday('${l.id}')" title="Unfreeze Today" class="text-[10px] px-2 py-1 bg-[var(--bg)] border border-[var(--border)] rounded-lg font-medium hover:opacity-80 text-red-600">
+                                                        ✕
+                                                    </button>
+                                                ` : ''}
+                                            </div>
+                                        ` : ''}
+                                    </div>
+                                    ` : ''}
+                                    ${renderCircularProgress(st.percent)}
+                                </div>
+                            </div>
+
+                            ${viewIsFrozen ? `
+                                <div class="p-3 rounded-2xl text-xs flex items-center justify-between border" style="background-color: var(--card); border-color: var(--border); color: var(--text-main);">
+                                    <span>🛡️ <strong>Streak is currently frozen for this day!</strong> Your streak is safe and protected.</span>
+                                    <button onclick="unfreezeToday('${l.id}')" class="text-[11px] font-semibold underline hover:opacity-80">Unfreeze Day</button>
+                                </div>
+                            ` : ''}
+
+                            <div class="space-y-2 pt-2">
+                                <div class="text-xs font-semibold uppercase tracking-wider" style="color: var(--text-muted)">${isTodo ? 'Tasks & Intervals' : `Habits for ${activeViewDate}`}</div>
+                    `;
+
+                    l.habits.forEach(h => {
+                        let checked = isTodo ? (l.checks && l.checks['todo'] && !!l.checks['todo'][h.id]) : !!(l.checks[activeViewDate] && l.checks[activeViewDate][h.id]);
+                        let isLocked = isTodo && h.dueDate && h.dueDate > todayStr;
+                        let clickAction = isLocked || viewIsFrozen ? '' : (isTodo ? `toggleTodo('${l.id}', '${h.id}')` : `toggleCheck('${l.id}', '${h.id}', '${activeViewDate}')`);
+                        
+                        let metaInfo = '';
+                        if (isTodo) {
+                            let tags = [];
+                            if (h.dueDate) tags.push(`Due: ${h.dueDate}`);
+                            if (h.intervalValue && h.intervalUnit) tags.push(`Repeat: every ${h.intervalValue} ${h.intervalUnit}`);
+                            if (tags.length > 0) {
+                                metaInfo = `<span class="text-[10px] bg-[var(--card)] px-2 py-0.5 rounded-md border border-[var(--border)] ml-2" style="color: var(--text-muted)">${tags.join(' • ')}</span>`;
+                            }
+                        }
+
+                        let cardStyle = '';
+                        let textStyle = '';
+                        let subText = '';
+
+                        if (isLocked) {
+                            cardStyle = 'bg-[var(--bg)]/30 border-[var(--border)] opacity-60 cursor-not-allowed';
+                            textStyle = 'text-[var(--text-muted)]';
+                            subText = `Available on ${h.dueDate}`;
+                        } else if (viewIsFrozen) {
+                            cardStyle = 'bg-[var(--bg)]/60 border-[var(--border)] opacity-80 cursor-default';
+                            textStyle = 'text-[var(--text-muted)]';
+                            subText = 'Frozen 🛡️';
+                        } else if (checked) {
+                            cardStyle = 'bg-[var(--bg)] border-[var(--border-hover)]';
+                            textStyle = 'text-[var(--text-muted)] line-through';
+                            subText = 'Done';
+                        } else {
+                            cardStyle = 'bg-[var(--bg)]/50 border-[var(--border)] hover:bg-[var(--bg)] cursor-pointer';
+                            textStyle = 'text-[var(--text-main)]';
+                            subText = 'Tap to complete';
+                        }
+
+                        html += `
+                            <div onclick="${clickAction}" class="flex items-center justify-between p-3.5 rounded-2xl border transition-all ${cardStyle}">
+                                <div class="flex items-center space-x-3 flex-1 overflow-hidden">
+                                    <div class="w-5 h-5 rounded-md border flex items-center justify-center text-xs shrink-0 ${isLocked || viewIsFrozen ? 'border-[var(--border)] bg-[var(--border)]/40 text-transparent' : (checked ? 'border-[var(--accent)] text-white' : 'border-[var(--border-hover)] bg-[var(--card)]')}" ${checked && !isLocked && !viewIsFrozen ? 'style="background-color: var(--accent)"' : ''}>
+                                        ${checked ? '✓' : ''}
+                                    </div>
+                                    <div class="truncate">
+                                        <span class="text-sm font-medium ${textStyle}">${h.text}</span>
+                                        ${metaInfo}
+                                    </div>
+                                </div>
+                                <span class="text-[11px] shrink-0 ml-2" style="color: var(--text-muted)">${subText}</span>
+                            </div>
+                        `;
+                    });
+
+                    html += `</div>`;
+                    html += renderCalendarView(l);
+                    html += `</div>`;
+                });
+                dashContainer.innerHTML = html;
+            }
+
+            let listsContainer = document.getElementById('lists-container');
+            let listsHtml = '';
+            appData.lists.forEach(l => {
+                let st = getStats(l);
+                let catSymbol = l.category || '✨';
+                let isTodo = l.type === 'todo';
+                listsHtml += `
+                    <div class="bg-[var(--card)] rounded-3xl p-6 border border-[var(--border)] flex flex-col justify-between shadow-sm transition-colors">
+                        <div>
+                            <div class="flex justify-between items-center mb-3">
+                                <span class="text-base px-2.5 py-1 rounded-full bg-[var(--bg)] border border-[var(--border)] inline-block">${catSymbol}</span>
+                                <div class="space-x-2">
+                                    <button onclick="openEditModal('${l.id}')" class="text-xs font-medium hover:underline" style="color: var(--text-main)">Edit</button>
+                                    <button onclick="deleteList('${l.id}')" class="text-xs text-red-600 hover:underline">Delete</button>
+                                </div>
+                            </div>
+                            <div class="flex justify-between items-start gap-3 mb-4">
+                                <div>
+                                    <h3 class="text-xl font-medium" style="color: var(--text-main)">${l.title}</h3>
+                                    <p class="text-xs mt-0.5" style="color: var(--text-muted)">${isTodo ? 'To-Do / Interval List' : `Duration: ${l.durationDays} Days • Start: ${l.startDate}`}</p>
+                                </div>
+                                ${renderCircularProgress(st.percent)}
+                            </div>
+                            
+                            <div class="my-4 space-y-1">
+                                <div class="text-xs font-semibold uppercase tracking-wider" style="color: var(--text-muted)">${isTodo ? 'Tasks (Tap to check/uncheck)' : `Today's Habits (${todayStr})`}</div>
+                                ${l.habits.map(h => {
+                                    let checked = isTodo ? (l.checks && l.checks['todo'] && !!l.checks['todo'][h.id]) : !!(l.checks[todayStr] && l.checks[todayStr][h.id]);
+                                    let isLocked = isTodo && h.dueDate && h.dueDate > todayStr;
+                                    let clickAction = isLocked ? '' : (isTodo ? `toggleTodo('${l.id}', '${h.id}')` : `toggleCheck('${l.id}', '${h.id}', '${todayStr}')`);
+                                    
+                                    let itemStyle = isLocked ? 'opacity-60 bg-[var(--bg)]/30' : (checked ? 'line-through text-[var(--text-muted)] bg-[var(--bg)]' : 'bg-[var(--bg)] hover:border-[var(--border-hover)] cursor-pointer');
+
+                                    return `
+                                        <div ${!isLocked ? `onclick="${clickAction}"` : ''} class="flex items-center justify-between text-xs bg-[var(--bg)] px-3 py-2 rounded-xl border border-[var(--border)] mt-1 ${!isLocked ? 'cursor-pointer hover:border-[var(--border-hover)]' : ''} ${itemStyle}" style="color: var(--text-main)">
+                                            <div class="flex items-center space-x-2 truncate">
+                                                <div class="w-4 h-4 rounded-md border flex items-center justify-center text-[10px] shrink-0 ${isLocked ? 'border-[var(--border)] bg-[var(--border)]/40 text-transparent' : (checked ? 'border-[var(--accent)] text-white' : 'border-[var(--border-hover)] bg-[var(--card)]')}" ${checked && !isLocked ? 'style="background-color: var(--accent)"' : ''}>${checked ? '✓' : ''}</div>
+                                                <span class="truncate">${h.text}</span>
+                                            </div>
+                                            <span class="text-[10px] shrink-0 ml-2" style="color: var(--text-muted)">${isLocked ? `Due: ${h.dueDate}` : (checked ? 'Done' : 'Pending')}</span>
+                                        </div>
+                                    `;
+                                }).join('')}
+                            </div>
+                        </div>
+                        <div>
+                            ${renderCalendarView(l)}
+                            <div class="pt-4 mt-4 border-t border-[var(--border)] flex justify-between text-xs" style="color: var(--text-muted)">
+                                ${isTodo ? `<span>Completed: <strong style="color: var(--text-main)">${st.completedDays}/${l.habits.length} tasks</strong></span>` : `<span>Streak: <strong style="color: var(--text-main)">${st.streak} days</strong></span><span>Completed: <strong style="color: var(--text-main)">${st.completedDays} days</strong></span>`}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            listsContainer.innerHTML = listsHtml || '<div class="col-span-2 text-center py-12 bg-[var(--card)] rounded-3xl border border-[var(--border)]" style="color: var(--text-muted)">No lists found. Click "+ New Goal List" in the top right to add one!</div>';
+        }
+
+        function toggleCheck(listId, habitId, dateStr) {
+            let list = appData.lists.find(l => l.id === listId);
+            if (!list) return;
+            if (list.type !== 'todo' && isDateFrozen(list, dateStr)) return; // Cannot check on frozen day
+            if (!list.checks[dateStr]) list.checks[dateStr] = {};
+            list.checks[dateStr][habitId] = !list.checks[dateStr][habitId];
+            processMissedDays();
+            saveData();
+            renderApp();
+        }
+
+        function toggleTodo(listId, habitId) {
+            let list = appData.lists.find(l => l.id === listId);
+            if (!list) return;
+            if (!list.checks) list.checks = {};
+            if (!list.checks['todo']) list.checks['todo'] = {};
+            
+            let habit = list.habits.find(h => h.id === habitId);
+            let todayStr = getLocalDateStr();
+            if (habit && habit.dueDate && habit.dueDate > todayStr) return; // Locked
+
+            let currentStatus = !!list.checks['todo'][habitId];
+            let newStatus = !currentStatus;
+            list.checks['todo'][habitId] = newStatus;
+
+            if (newStatus && habit && habit.intervalValue && habit.intervalUnit) {
+                let val = parseInt(habit.intervalValue);
+                let unit = habit.intervalUnit;
+                let baseDate = habit.dueDate ? new Date(habit.dueDate + 'T00:00:00') : new Date();
+                if (isNaN(baseDate.getTime())) baseDate = new Date();
+
+                if (unit === 'days') baseDate.setDate(baseDate.getDate() + val);
+                else if (unit === 'weeks') baseDate.setDate(baseDate.getDate() + (val * 7));
+                else if (unit === 'months') baseDate.setMonth(baseDate.getMonth() + val);
+
+                habit.dueDate = getLocalDateStr(baseDate);
+                list.checks['todo'][habitId] = false;
+
+                list.habits = list.habits.filter(h => h.id !== habitId);
+                list.habits.push(habit);
+            }
+
+            saveData();
+            renderApp();
+
+            if (list.type === 'todo') {
+                let activeHabits = list.habits.filter(h => !h.dueDate || h.dueDate <= todayStr);
+                let allDone = activeHabits.length > 0 && activeHabits.every(h => !!list.checks['todo'][h.id]);
+                if (allDone) {
+                    showCompletionModal(list.id);
+                }
+            }
+        }
+
+        function openFreezeModal(listId, freezesLeft) {
+            if (freezesLeft <= 0) {
+                alert('You have used all available streak freezes for this list!');
+                return;
+            }
             let list = appData.lists.find(l => l.id === listId);
             if (!list) return;
             document.getElementById('freeze-modal-list-id').value = listId;
-            document.getElementById('freeze-count-left').innerText = list.freezesLeft !== undefined ? list.freezesLeft : 2;
+            document.getElementById('freeze-count-left').innerText = freezesLeft;
+            document.getElementById('freeze-input-days').value = list.freezeDuration || 7;
             document.getElementById('freeze-modal').classList.remove('hidden');
         }
 
@@ -815,45 +1059,36 @@
 
         function confirmActivateFreeze() {
             let listId = document.getElementById('freeze-modal-list-id').value;
-            let days = parseInt(document.getElementById('freeze-input-days').value) || 3;
+            let daysToFreeze = parseInt(document.getElementById('freeze-input-days').value) || 1;
             let list = appData.lists.find(l => l.id === listId);
-            if (!list) return;
+            if (list) {
+                if (!list.freezes) list.freezes = [];
+                let curr = new Date();
+                let maxDays = list.freezeDuration || 7;
+                if (daysToFreeze > maxDays) daysToFreeze = maxDays;
 
-            let freezesLeft = list.freezesLeft !== undefined ? list.freezesLeft : 2;
-            if (freezesLeft <= 0) {
-                alert("You have no streak freezes remaining for this list.");
-                closeFreezeModal();
-                return;
-            }
-
-            list.freezesLeft = freezesLeft - 1;
-            if (!list.freezesUsed) list.freezesUsed = [];
-
-            let d = new Date();
-            for (let i = 0; i < days; i++) {
-                let dStr = getLocalDateStr(d);
-                if (!list.freezesUsed.includes(dStr)) {
-                    list.freezesUsed.push(dStr);
+                for (let i = 0; i < daysToFreeze; i++) {
+                    let dStr = getLocalDateStr(curr);
+                    if (!list.freezes.includes(dStr)) {
+                        list.freezes.push(dStr);
+                    }
+                    curr.setDate(curr.getDate() + 1);
                 }
-                d.setDate(d.getDate() + 1);
+                processMissedDays();
+                saveData();
+                renderApp();
             }
-
-            saveData();
             closeFreezeModal();
-            renderApp();
         }
 
-        function checkListCompletionStatus(list) {
-            if (list.type !== 'todo') return;
-            let allDone = list.tasks.length > 0 && list.tasks.every(t => {
-                let key = Object.keys(t.completedDays || {}).find(k => t.completedDays[k]);
-                return key !== undefined;
-            });
-            if (allDone && !list.completedPromptShown) {
-                list.completedPromptShown = true;
-                saveData();
-                showCompletionModal(list.id);
-            }
+        function unfreezeToday(listId) {
+            let list = appData.lists.find(l => l.id === listId);
+            if (!list || !list.freezes) return;
+            let todayStr = getLocalDateStr();
+            list.freezes = list.freezes.filter(d => d !== todayStr);
+            processMissedDays();
+            saveData();
+            renderApp();
         }
 
         function showCompletionModal(listId) {
@@ -867,202 +1102,225 @@
 
         function confirmDeleteCompletedList() {
             let listId = document.getElementById('complete-modal-list-id').value;
-            appData.lists = appData.lists.filter(l => l.id !== listId);
-            saveData();
+            if (listId) {
+                appData.lists = appData.lists.filter(l => l.id !== listId);
+                saveData();
+                renderApp();
+            }
             closeCompletionModal();
+        }
+
+        function switchTab(tab) {
+            currentTab = tab;
+            let activeBg = 'var(--bg)';
+            let activeText = 'var(--text-main)';
+            let mutedText = 'var(--text-muted)';
+            if (tab === 'dashboard') {
+                document.getElementById('view-dashboard').classList.remove('hidden');
+                document.getElementById('view-lists').classList.add('hidden');
+                document.getElementById('tab-dash').style.backgroundColor = activeBg;
+                document.getElementById('tab-dash').style.color = activeText;
+                document.getElementById('tab-lists').style.backgroundColor = 'transparent';
+                document.getElementById('tab-lists').style.color = mutedText;
+            } else {
+                document.getElementById('view-lists').classList.remove('hidden');
+                document.getElementById('view-dashboard').classList.add('hidden');
+                document.getElementById('tab-lists').style.backgroundColor = activeBg;
+                document.getElementById('tab-lists').style.color = activeText;
+                document.getElementById('tab-dash').style.backgroundColor = 'transparent';
+                document.getElementById('tab-dash').style.color = mutedText;
+            }
+        }
+
+        function renderTaskInputRows(items) {
+            let container = document.getElementById('tasks-input-container');
+            if (selectedListType === 'habit') {
+                let str = items.map(i => i.text).join(', ');
+                container.innerHTML = `<input type="text" id="input-habits-comma" required placeholder="Drink water, Read 10 pages, Walk 20 mins" value="${str}" class="w-full bg-[var(--card)] border border-[var(--border)] rounded-xl px-3 py-2 text-sm outline-none transition-colors" style="color: var(--text-main)">`;
+            } else {
+                let html = '';
+                if (items.length === 0) items = [{ text: '', dueDate: getLocalDateStr(), intervalValue: '', intervalUnit: 'weeks' }];
+                items.forEach((item, index) => {
+                    html += `
+                        <div class="task-row bg-[var(--card)] p-3 rounded-2xl border border-[var(--border)] space-y-2 transition-colors">
+                            <div class="flex items-center gap-2">
+                                <input type="text" placeholder="Task name (e.g. Change bed sheets)" value="${item.text || ''}" class="task-text-input flex-1 bg-[var(--bg)] border border-[var(--border)] rounded-xl px-3 py-1.5 text-sm outline-none" style="color: var(--text-main)" required>
+                                <button type="button" onclick="this.closest('.task-row').remove()" class="text-xs text-red-600 px-2 py-1 hover:bg-red-50 rounded-lg">✕</button>
+                            </div>
+                            <div class="grid grid-cols-3 gap-2">
+                                <div>
+                                    <label class="block text-[10px] uppercase font-semibold mb-0.5" style="color: var(--text-muted)">Target Date</label>
+                                    <input type="date" value="${item.dueDate || getLocalDateStr()}" class="task-date-input w-full bg-[var(--bg)] border border-[var(--border)] rounded-xl px-2 py-1 text-xs outline-none" style="color: var(--text-main)">
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] uppercase font-semibold mb-0.5" style="color: var(--text-muted)">Repeat Every</label>
+                                    <input type="number" min="1" placeholder="e.g. 3" value="${item.intervalValue || ''}" class="task-interval-val w-full bg-[var(--bg)] border border-[var(--border)] rounded-xl px-2 py-1 text-xs outline-none" style="color: var(--text-main)">
+                                </div>
+                                <div>
+                                    <label class="block text-[10px] uppercase font-semibold mb-0.5" style="color: var(--text-muted)">Interval Unit</label>
+                                    <select class="task-interval-unit w-full bg-[var(--bg)] border border-[var(--border)] rounded-xl px-2 py-1 text-xs outline-none" style="color: var(--text-main)">
+                                        <option value="days" ${item.intervalUnit === 'days' ? 'selected' : ''}>Days</option>
+                                        <option value="weeks" ${item.intervalUnit === 'weeks' || !item.intervalUnit ? 'selected' : ''}>Weeks</option>
+                                        <option value="months" ${item.intervalUnit === 'months' ? 'selected' : ''}>Months</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+                container.innerHTML = html;
+            }
+        }
+
+        function addTaskInputRow() {
+            let container = document.getElementById('tasks-input-container');
+            if (selectedListType === 'habit') return;
+            let div = document.createElement('div');
+            div.className = "task-row bg-[var(--card)] p-3 rounded-2xl border border-[var(--border)] space-y-2 transition-colors";
+            div.innerHTML = `
+                <div class="flex items-center gap-2">
+                    <input type="text" placeholder="Task name (e.g. Change bed sheets)" class="task-text-input flex-1 bg-[var(--bg)] border border-[var(--border)] rounded-xl px-3 py-1.5 text-sm outline-none" style="color: var(--text-main)" required>
+                    <button type="button" onclick="this.closest('.task-row').remove()" class="text-xs text-red-600 px-2 py-1 hover:bg-red-50 rounded-lg">✕</button>
+                </div>
+                <div class="grid grid-cols-3 gap-2">
+                    <div>
+                        <label class="block text-[10px] uppercase font-semibold mb-0.5" style="color: var(--text-muted)">Target Date</label>
+                        <input type="date" value="${getLocalDateStr()}" class="task-date-input w-full bg-[var(--bg)] border border-[var(--border)] rounded-xl px-2 py-1 text-xs outline-none" style="color: var(--text-main)">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] uppercase font-semibold mb-0.5" style="color: var(--text-muted)">Repeat Every</label>
+                        <input type="number" min="1" placeholder="e.g. 3" class="task-interval-val w-full bg-[var(--bg)] border border-[var(--border)] rounded-xl px-2 py-1 text-xs outline-none" style="color: var(--text-main)">
+                    </div>
+                    <div>
+                        <label class="block text-[10px] uppercase font-semibold mb-0.5" style="color: var(--text-muted)">Interval Unit</label>
+                        <select class="task-interval-unit w-full bg-[var(--bg)] border border-[var(--border)] rounded-xl px-2 py-1 text-xs outline-none" style="color: var(--text-main)">
+                            <option value="days">Days</option>
+                            <option value="weeks" selected>Weeks</option>
+                            <option value="months">Months</option>
+                        </select>
+                    </div>
+                </div>
+            `;
+            container.appendChild(div);
+        }
+
+        function openModal() {
+            document.getElementById('modal-title').innerText = 'Create New Goal List';
+            document.getElementById('input-edit-id').value = '';
+            document.getElementById('input-title').value = '';
+            document.getElementById('input-duration').value = '30';
+            document.getElementById('input-startdate').value = getLocalDateStr();
+            document.getElementById('input-freeze-count').value = '2';
+            document.getElementById('input-freeze-duration').value = '7';
+            setListType('habit');
+            document.getElementById('app-modal').classList.remove('hidden');
+        }
+
+        function openEditModal(id) {
+            let list = appData.lists.find(l => l.id === id);
+            if (!list) return;
+
+            document.getElementById('modal-title').innerText = 'Edit Goal List';
+            document.getElementById('input-edit-id').value = list.id;
+            document.getElementById('input-title').value = list.title;
+            document.getElementById('input-category').value = list.category || '🌿';
+            document.getElementById('input-duration').value = list.durationDays || 30;
+            document.getElementById('input-startdate').value = list.startDate || getLocalDateStr();
+            document.getElementById('input-freeze-count').value = list.freezeCount !== undefined ? list.freezeCount : 2;
+            document.getElementById('input-freeze-duration').value = list.freezeDuration !== undefined ? list.freezeDuration : 7;
+            
+            setListType(list.type || 'habit');
+            renderTaskInputRows(list.habits);
+            document.getElementById('app-modal').classList.remove('hidden');
+        }
+
+        function closeModal() { document.getElementById('app-modal').classList.add('hidden'); }
+
+        function handleFormSubmit(e) {
+            e.preventDefault();
+            let editId = document.getElementById('input-edit-id').value;
+            let title = document.getElementById('input-title').value.trim();
+            let category = document.getElementById('input-category').value;
+            let durationDays = parseInt(document.getElementById('input-duration').value) || 30;
+            let startDate = document.getElementById('input-startdate').value || getLocalDateStr();
+            let freezeCount = parseInt(document.getElementById('input-freeze-count').value) || 0;
+            let freezeDuration = parseInt(document.getElementById('input-freeze-duration').value) || 7;
+
+            let habits = [];
+            if (selectedListType === 'habit') {
+                let rawHabits = document.getElementById('input-habits-comma').value;
+                habits = rawHabits.split(',').map((item, index) => {
+                    let trimmed = item.trim();
+                    return {
+                        id: 'h-' + index + '-' + Date.now(),
+                        text: trimmed
+                    };
+                }).filter(h => h.text.length > 0);
+            } else {
+                let rows = document.querySelectorAll('.task-row');
+                rows.forEach((row, index) => {
+                    let text = row.querySelector('.task-text-input').value.trim();
+                    let dueDate = row.querySelector('.task-date-input').value;
+                    let intervalValue = row.querySelector('.task-interval-val').value;
+                    let intervalUnit = row.querySelector('.task-interval-unit').value;
+                    if (text) {
+                        habits.push({
+                            id: 't-' + index + '-' + Date.now(),
+                            text,
+                            dueDate: dueDate || getLocalDateStr(),
+                            intervalValue: intervalValue ? parseInt(intervalValue) : '',
+                            intervalUnit
+                        });
+                    }
+                });
+            }
+
+            if (habits.length === 0) {
+                alert('Please provide at least one valid item.');
+            }
+
+            if (editId) {
+                let list = appData.lists.find(l => l.id === editId);
+                if (list) {
+                    list.title = title;
+                    list.category = category;
+                    list.type = selectedListType;
+                    list.durationDays = durationDays;
+                    list.startDate = startDate;
+                    list.freezeCount = freezeCount;
+                    list.freezeDuration = freezeDuration;
+                    list.habits = habits;
+                }
+            } else {
+                appData.lists.push({
+                    id: 'list-' + Date.now(),
+                    title,
+                    category,
+                    type: selectedListType,
+                    durationDays,
+                    startDate,
+                    freezeCount,
+                    freezeDuration,
+                    habits,
+                    checks: {},
+                    missedDays: [],
+                    freezes: []
+                });
+            }
+
+            saveData();
+            closeModal();
             renderApp();
         }
 
-        function renderApp() {
-            // Update greetings & Sanctuary Title
-            if (appData.userName) {
-                document.getElementById('user-greeting-badge').innerText = `Hello, ${appData.userName}`;
-            }
-            if (appData.sanctuaryName) {
-                document.getElementById('sanctuary-title-display').innerText = appData.sanctuaryName;
-            }
-
-            // Date text display
-            let options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            document.getElementById('date-text').innerText = new Date().toLocaleDateString(undefined, options);
-
-            // Sync date picker
-            let datePicker = document.getElementById('dash-date-picker');
-            if (datePicker && datePicker.value !== activeViewDate) {
-                datePicker.value = activeViewDate;
-            }
-
-            // Filter dropdown population
-            let filterSelect = document.getElementById('filter-select');
-            let currentFilter = filterSelect.value;
-            filterSelect.innerHTML = `<option value="all">All Active Lists</option>`;
-            appData.lists.forEach(l => {
-                let opt = document.createElement('option');
-                opt.value = l.id;
-                opt.textContent = `${l.categorySymbol || '🌿'} ${l.title}`;
-                filterSelect.appendChild(opt);
-            });
-            filterSelect.value = currentFilter;
-
-            // Compute global stats
-            let totalStreaks = 0;
-            let todayStr = getLocalDateStr();
-            let totalTasksToday = 0;
-            let completedTasksToday = 0;
-
-            appData.lists.forEach(l => {
-                if (l.type === 'habit') {
-                    totalStreaks += calculateListStreak(l);
-                    l.tasks.forEach(t => {
-                        totalTasksToday++;
-                        if (t.completedDays && t.completedDays[todayStr]) completedTasksToday++;
-                    });
-                } else if (l.type === 'todo') {
-                    l.tasks.forEach(t => {
-                        if (!t.date || t.date === activeViewDate) {
-                            totalTasksToday++;
-                            if (t.completedDays && t.completedDays[activeViewDate]) completedTasksToday++;
-                        }
-                    });
-                }
-            });
-
-            document.getElementById('stat-streaks').innerText = totalStreaks;
-            document.getElementById('stat-completed').innerText = `${completedTasksToday}/${totalTasksToday}`;
-
-            // Render Dash view container
-            let dashContainer = document.getElementById('dashboard-container');
-            dashContainer.innerHTML = '';
-
-            let filteredLists = appData.lists;
-            if (filterSelect.value !== 'all') {
-                filteredLists = appData.lists.filter(l => l.id === filterSelect.value);
-            }
-
-            if (filteredLists.length === 0) {
-                dashContainer.innerHTML = `
-                    <div class="bg-[var(--card)] rounded-2xl p-12 text-center border border-[var(--border)] transition-colors">
-                        <div class="text-3xl mb-2">🌿</div>
-                        <h3 class="text-base font-medium" style="color: var(--text-main)">Your sanctuary is quiet</h3>
-                        <p class="text-xs mt-1 mb-4" style="color: var(--text-muted)">Create your first habit tracker or to-do list to begin.</p>
-                        <button onclick="openModal()" class="px-4 py-2 rounded-full text-xs font-medium" style="background-color: var(--accent); color: var(--accent-text)">+ New Goal List</button>
-                    </div>
-                `;
-            } else {
-                filteredLists.forEach(list => {
-                    let card = document.createElement('div');
-                    card.className = "bg-[var(--card)] rounded-2xl p-6 border border-[var(--border)] space-y-4 transition-colors";
-                    
-                    let streakHtml = '';
-                    if (list.type === 'habit') {
-                        let st = calculateListStreak(list);
-                        let freezesLeft = list.freezesLeft !== undefined ? list.freezesLeft : 2;
-                        streakHtml = `
-                            <div class="flex items-center gap-2">
-                                <span class="text-xs font-medium px-2.5 py-1 rounded-lg border border-[var(--border)] bg-[var(--bg)]" style="color: var(--text-main)">🔥 Streak: <strong>${st} days</strong></span>
-                                <button onclick="openFreezeModal('${list.id}')" class="text-xs font-medium px-2.5 py-1 rounded-lg border border-[var(--border)] bg-[var(--bg)] hover:opacity-80" style="color: var(--text-muted)" title="Freeze Streak">🛡️ (${freezesLeft})</button>
-                            </div>
-                        `;
-                    }
-
-                    let tasksHtml = '';
-                    let activeTasksForView = list.tasks;
-                   if (list.type === 'todo') {
-                        activeTasksForView = [...list.tasks].sort((a, b) => {
-                            let aFuture = a.date && a.date > activeViewDate ? 1 : 0;
-                            let bFuture = b.date && b.date > activeViewDate ? 1 : 0;
-                            return aFuture - bFuture;
-                        }).filter(t => !t.date || t.date === activeViewDate || t.date > activeViewDate);
-                    }
-                    if (activeTasksForView.length === 0) {
-                        tasksHtml = `<p class="text-xs italic" style="color: var(--text-muted)">No tasks scheduled for this specific date.</p>`;
-                    } else {
-                        activeTasksForView.forEach(task => {
-                            let isDone = task.completedDays && task.completedDays[activeViewDate];
-                            let isOverdue = !isDone && task.date && task.date < activeViewDate;
-                            
-                            let dateBadge = task.date ? `<span class="text-[10px] px-2 py-0.5 rounded-md bg-[var(--bg)] border border-[var(--border)] ml-2" style="color: var(--text-muted)">📅 ${task.date}</span>` : '';
-                            
-                            let cardStyle = isOverdue 
-                                ? `background-color: var(--badge-bg); border-color: var(--accent);` 
-                                : `background-color: var(--bg); border-color: var(--border);`;
-
-                            let overdueLabel = isOverdue ? `<span class="text-[10px] font-bold px-2 py-0.5 rounded bg-[var(--accent)] text-[var(--accent-text)] ml-2">Overdue</span>` : '';
-
-                            tasksHtml += `
-                                <div class="flex items-center justify-between p-3 rounded-xl border transition-colors" style="${cardStyle}">
-                                    <div class="flex items-center space-x-3">
-                                        <input type="checkbox" ${isDone ? 'checked' : ''} onchange="toggleTaskCompletion('${list.id}', '${task.id}', '${activeViewDate}')" class="w-4 h-4 rounded accent-[var(--accent)] cursor-pointer">
-                                        <span class="text-sm font-semibold ${isDone ? 'line-through opacity-50' : ''}" style="color: var(--text-main)">${task.name}</span>
-                                        ${dateBadge}
-                                        ${overdueLabel}
-                                    </div>
-                                    <span class="text-xs font-medium">${isDone ? '✨ Done' : ''}</span>
-                                </div>
-                            `;
-                        });
-                    }
-
-                    card.innerHTML = `
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center space-x-2">
-                                <span class="text-lg">${list.categorySymbol || '🌿'}</span>
-                                <h3 class="text-base font-medium" style="color: var(--text-main)">${list.title}</h3>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                ${streakHtml}
-                                <button onclick="openModal('${list.id}')" class="text-xs px-2.5 py-1 rounded-lg border border-[var(--border)] bg-[var(--bg)]" style="color: var(--text-muted)">Edit</button>
-                                <button onclick="deleteList('${list.id}')" class="text-xs px-2.5 py-1 rounded-lg border border-[var(--border)] bg-[var(--bg)] text-red-500">Delete</button>
-                            </div>
-                        </div>
-                        <div class="space-y-2">
-                            ${tasksHtml}
-                        </div>
-                    `;
-                    dashContainer.appendChild(card);
-                });
-            }
-
-            // Render All Lists View Container
-            let listsContainer = document.getElementById('lists-container');
-            listsContainer.innerHTML = '';
-            if (appData.lists.length === 0) {
-                listsContainer.innerHTML = `<p class="text-xs italic" style="color: var(--text-muted)">No lists created yet.</p>`;
-            } else {
-                appData.lists.forEach(list => {
-                    let card = document.createElement('div');
-                    card.className = "bg-[var(--card)] rounded-2xl p-6 border border-[var(--border)] space-y-4 transition-colors";
-                    
-                    let taskListSummary = '';
-                    list.tasks.forEach(t => {
-                        taskListSummary += `<li class="text-xs py-1" style="color: var(--text-main)">• ${t.name} ${t.date ? `(📅 ${t.date})` : ''}</li>`;
-                    });
-
-                    card.innerHTML = `
-                        <div class="flex items-center justify-between">
-                            <div class="flex items-center space-x-2">
-                                <span class="text-lg">${list.categorySymbol || '🌿'}</span>
-                                <h3 class="text-base font-medium" style="color: var(--text-main)">${list.title}</h3>
-                            </div>
-                            <span class="text-[10px] px-2.5 py-1 rounded-full border border-[var(--border)] bg-[var(--bg)] uppercase font-semibold" style="color: var(--text-muted)">${list.type === 'habit' ? 'Habit Tracker' : 'To-Do List'}</span>
-                        </div>
-                        <ul class="pl-2 space-y-1">
-                            ${taskListSummary}
-                        </ul>
-                        <div class="flex justify-end gap-2 pt-2">
-                            <button onclick="openModal('${list.id}')" class="text-xs px-3 py-1.5 rounded-lg border border-[var(--border)] bg-[var(--bg)]" style="color: var(--text-main)">Edit List</button>
-                            <button onclick="deleteList('${list.id}')" class="text-xs px-3 py-1.5 rounded-lg border border-[var(--border)] bg-[var(--bg)] text-red-500">Delete</button>
-                        </div>
-                    `;
-                    listsContainer.appendChild(card);
-                });
+        function deleteList(id) {
+            if (confirm('Are you sure you want to delete this list?')) {
+                appData.lists = appData.lists.filter(l => l.id !== id);
+                saveData();
+                renderApp();
             }
         }
 
-        window.onload = function() {
-            initThemeOnLoad();
-            loadData();
-        };
+        window.onload = loadData;
     </script>
 </body>
-</html>
